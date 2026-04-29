@@ -1,0 +1,70 @@
+import type { Lesson } from "@/types/lesson";
+
+// Placeholder video URLs – replace with your Cloudinary URLs when ready
+// Using a public test video for development; swap for Cloudinary in production
+const PLACEHOLDER_VIDEO =
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
+export const sampleLessons: Lesson[] = [
+  {
+    id: "1",
+    title: "Greetings and introductions",
+    description: "Learn how to say hello and introduce yourself in English.",
+    videoUrl: PLACEHOLDER_VIDEO,
+    level: "beginner",
+    durationSeconds: 60,
+    vocabulary: [
+      { word: "Hello", meaning: "a greeting" },
+      { word: "Hi", meaning: "informal greeting" },
+      { word: "My name is", meaning: "phrase used to introduce yourself" },
+      {
+        word: "Nice to meet you",
+        meaning: "polite phrase when meeting someone",
+        example: "Nice to meet you! I'm Anna.",
+      },
+    ],
+  },    id: "2",
+    title: "Ordering at a café",
+    description: "Useful phrases for ordering coffee and food.",
+    videoUrl: PLACEHOLDER_VIDEO,
+    level: "beginner",
+    durationSeconds: 90,
+    vocabulary: [
+      { word: "I would like", meaning: "polite way to request something" },
+      { word: "Could I have", meaning: "polite way to ask for something" },
+      { word: "Please", meaning: "word used to make a request polite" },
+      { word: "Thank you", meaning: "expression of gratitude" },
+    ],
+  },
+  {
+    id: "3",
+    title: "Small talk: weather and hobbies",
+    description: "How to make small talk in English.",
+    videoUrl: PLACEHOLDER_VIDEO,
+    level: "intermediate",
+    durationSeconds: 120,
+    vocabulary: [
+      { word: "How about you?", meaning: "asking the other person the same question" },
+      { word: "What do you think?", meaning: "asking for someone's opinion" },
+      { word: "I enjoy", meaning: "to like or find pleasure in" },
+      { word: "It depends", meaning: "varies according to the situation" },
+    ],
+  },
+  {
+    id: "4",
+    title: "Giving opinions in meetings",
+    description: "Professional phrases for expressing your view.",
+    videoUrl: PLACEHOLDER_VIDEO,
+    level: "advanced",
+    durationSeconds: 150,
+    vocabulary: [
+      { word: "From my perspective", meaning: "in my view or opinion" },
+      { word: "I'd argue that", meaning: "I would say or claim that" },
+      {
+        word: "To put it simply",
+        meaning: "to explain in a simple way",
+        example: "To put it simply, we need more time.",
+      },
+    ],
+  },
+];

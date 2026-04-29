@@ -1,0 +1,40 @@
+{
+  "segments": [
+    {
+      "id": 0,
+      "start": 0,
+      "end": 4.62,
+      "text": "what my sister is expecting"
+    },
+    {
+      "id": 1,
+      "start": 4.62,
+      "end": 6.93,
+      "text": "what a baby"
+    },
+    {
+      "id": 2,
+      "start": 6.93,
+      "end": 12.06,
+      "text": "oh she's pregnant yes it's a boy or a girl"
+    },
+    {
+      "id": 3,
+      "start": 12.06,
+      "end": 16.48,
+      "text": "oh they don't know yet so you're ah they don't know"
+    },
+    {
+      "id": 4,
+      "start": 16.48,
+      "end": 22.17,
+      "text": "why then you don't know if you're gonna be an uncle or"
+    },
+    {
+      "id": 5,
+      "start": 22.17,
+      "end": 23.12,
+      "text": "an aunt"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "englishfeed",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "generate:transcript": "tsx scripts/transcribeVideo.ts",
+    "generate:vocab": "tsx scripts/extractVocabulary.ts",
+    "generate:lesson": "tsx scripts/buildLesson.ts",
+    "generate:subtitles": "tsx scripts/generateSubtitles.ts",
+    "generate:practice-sentences": "tsx scripts/generatePracticeSentencesAll.ts",
+    "ingest": "tsx scripts/ingest-lessons.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1014.0",
+    "@google/genai": "^1.48.0",
+    "@mediapipe/tasks-vision": "^0.10.17",
+    "@supabase/supabase-js": "^2.99.1",
+    "dotenv": "^17.3.1",
+    "lucide-react": "^0.577.0",
+    "next": "^16.2.2",
+    "openai": "^4.77.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}

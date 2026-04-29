@@ -1,0 +1,56 @@
+[
+  {
+    "id": "carolina-lesson",
+    "title": "what my sister is expecting what a baby oh she's pregnant ye",
+    "description": "what my sister is expecting what a baby oh she's pregnant yes it's a boy or a girl oh they don't know yet so you're ah t",
+    "videoUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/carolina-lesson.mp4",
+    "thumbnailUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/thumbnails/carolina-lesson.jpg",
+    "subtitlesUrl": "/subtitles/carolina-lesson.json",
+    "level": "beginner",
+    "durationSeconds": 60,
+    "topic": "general",
+    "tags": [
+      "english",
+      "lesson",
+      "beginner",
+      "practice",
+      "vocabulary"
+    ]
+  },
+  {
+    "id": "wet-towel",
+    "title": "What are you doing",
+    "description": "What are you doing? What? I'm hanging the towel on the drying rack. That towel is sopping wet. You need to wring it out.",
+    "videoUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/wet-towel.mp4",
+    "thumbnailUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/thumbnails/wet-towel.jpg",
+    "subtitlesUrl": "/subtitles/wet-towel.json",
+    "level": "beginner",
+    "durationSeconds": 60,
+    "topic": "general",
+    "tags": [
+      "english",
+      "lesson",
+      "beginner",
+      "practice",
+      "vocabulary"
+    ]
+  },
+  {
+    "id": "simple-present-verb-to-be",
+    "title": "Want to learn simple English confidently",
+    "description": "Want to learn simple English confidently? Start with to be. The verb to be shows who or what someone is and the forms ar",
+    "videoUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/simple-present-verb-to-be.mp4",
+    "thumbnailUrl": "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev/thumbnails/simple-present-verb-to-be.jpg",
+    "subtitlesUrl": "/subtitles/simple-present-verb-to-be.json",
+    "level": "beginner",
+    "topic": "general",
+    "tags": [
+      "english",
+      "lesson",
+      "beginner",
+      "practice",
+      "vocabulary"
+    ],
+    "durationSeconds": 60
+  }
+]

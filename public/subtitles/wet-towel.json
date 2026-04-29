@@ -1,0 +1,34 @@
+{
+  "segments": [
+    {
+      "id": 0,
+      "start": 0,
+      "end": 4,
+      "text": "What are you doing?"
+    },
+    {
+      "id": 1,
+      "start": 4,
+      "end": 8,
+      "text": "What? I'm hanging the towel on the drying rack."
+    },
+    {
+      "id": 2,
+      "start": 8,
+      "end": 14,
+      "text": "That towel is sopping wet. You need to wring it out."
+    },
+    {
+      "id": 3,
+      "start": 14,
+      "end": 18,
+      "text": "Oh."
+    },
+    {
+      "id": 4,
+      "start": 18,
+      "end": 22,
+      "text": "Ah, there. I'll do the laundry next time."
+    }
+  ]
+}
