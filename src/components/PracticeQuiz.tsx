@@ -123,7 +123,7 @@ export function PracticeQuiz({
   if (loading) {
     return (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 sm:p-4"
         role="dialog"
         aria-modal="true"
         aria-label="Practice quiz"
@@ -151,7 +151,7 @@ export function PracticeQuiz({
   if (error) {
     return (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 sm:p-4"
         role="dialog"
         aria-modal="true"
         aria-label="Practice quiz"
@@ -180,19 +180,19 @@ export function PracticeQuiz({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label="Practice quiz"
       onClick={onClose}
       suppressHydrationWarning
     >
-      <div
-        className="w-full max-w-md rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black]"
-        onClick={(e) => e.stopPropagation()}
-        suppressHydrationWarning
-      >
-        <div className="flex items-start justify-between gap-3 border-b-2 border-black p-4">
+        <div
+          className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black]"
+          onClick={(e) => e.stopPropagation()}
+          suppressHydrationWarning
+        >
+          <div className="flex shrink-0 items-start justify-between gap-3 border-b-2 border-black p-3 sm:p-4">
           <div className="min-w-0">
             <div className="text-sm font-bold">{progressLabel}</div>
             <div className="truncate text-base font-bold text-black">
@@ -209,7 +209,7 @@ export function PracticeQuiz({
           </button>
         </div>
 
-        <div className="space-y-4 p-4">
+          <div className="min-h-0 flex-1 overflow-y-auto space-y-4 p-3 sm:p-4">
           {!completed ? (
             <>
               <div className="flex items-start gap-2">
@@ -324,7 +324,7 @@ export function PracticeQuiz({
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t-2 border-black p-4">
+          <div className="flex shrink-0 items-center justify-end gap-2 border-t-2 border-black p-3 sm:p-4">
           <button
             type="button"
             onClick={onClose}

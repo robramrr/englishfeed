@@ -455,7 +455,7 @@ export function PronunciationPractice({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-3 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label="Pronunciation practice"
@@ -463,12 +463,12 @@ export function PronunciationPractice({
       suppressHydrationWarning
     >
       <div
-        className="w-full max-w-md border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] rounded-none"
+        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] rounded-none"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
-        <div className="flex items-center justify-between border-b-2 border-black p-4">
-          <h2 className="text-lg font-bold text-black">
+        <div className="flex shrink-0 items-center justify-between border-b-2 border-black p-3 sm:p-4">
+          <h2 className="min-w-0 truncate text-base font-bold text-black sm:text-lg">
             Pronunciation Practice
           </h2>
           <button
@@ -481,7 +481,7 @@ export function PronunciationPractice({
           </button>
         </div>
 
-        <div className="space-y-4 p-4">
+        <div className="min-h-0 flex-1 overflow-y-auto space-y-4 p-3 sm:p-4">
           <p className="text-sm font-bold text-black">Say this sentence:</p>
           <div className="rounded-none border-2 border-black bg-white px-3 py-2">
             <div className="flex items-start gap-2">

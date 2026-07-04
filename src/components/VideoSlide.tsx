@@ -11,11 +11,8 @@ import { trackEvent } from "@/lib/analytics";
 import { saveClip } from "@/lib/clipStorage";
 import {
   addLikedLesson,
-  addSavedLesson,
   isLiked as isLikedStored,
-  isSaved as isSavedStored,
   removeLikedLesson,
-  removeSavedLesson,
 } from "@/lib/feedStorage";
 import { getSavedVocab, saveVocabItem } from "@/lib/vocabStorage";
 import { PracticeQuiz } from "@/components/PracticeQuiz";
@@ -38,7 +35,6 @@ import {
   type WordTiming,
 } from "@/lib/subtitlePlayback";
 import {
-  Bookmark,
   BookOpen,
   Bot,
   Camera,
@@ -301,7 +297,6 @@ export function VideoSlide({
   const [videoError, setVideoError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [practiceOpen, setPracticeOpen] = useState(false);
   const [practiceQuestions, setPracticeQuestions] = useState<
@@ -540,10 +535,9 @@ export function VideoSlide({
     return () => observer.disconnect();
   }, [lesson.id, videoError, scrollContainerRef, scrollContainerReady]);
 
-  // Sync like/save state from localStorage (client-only)
+  // Sync like state from localStorage (client-only)
   useEffect(() => {
     setIsLiked(isLikedStored(lesson.id));
-    setIsSaved(isSavedStored(lesson.id));
   }, [lesson.id]);
 
   // Seek to initial time when opening from a clip link
@@ -1191,23 +1185,24 @@ export function VideoSlide({
           suppressHydrationWarning
         >
           <div
-            className="min-w-[220px] max-w-sm rounded-none border-2 border-black bg-white px-4 py-3 shadow-[3px_3px_0px_black]"
+            className="max-h-[min(70dvh,420px)] w-full max-w-sm overflow-y-auto rounded-none border-2 border-black bg-white px-3 py-3 shadow-[3px_3px_0px_black] sm:px-4"
             onClick={(e) => e.stopPropagation()}
             suppressHydrationWarning
           >
-            <div className="flex items-center gap-2">
-              <p className="text-lg font-bold capitalize text-black">
-                {selectedSubtitleWord}
-              </p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  speakWord(selectedSubtitleWord ?? "");
-                }}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
-                aria-label="Pronounce word"
-              >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                <p className="min-w-0 truncate text-lg font-bold capitalize text-black">
+                  {selectedSubtitleWord}
+                </p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speakWord(selectedSubtitleWord ?? "");
+                  }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                  aria-label="Pronounce word"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -1252,6 +1247,27 @@ export function VideoSlide({
               >
                 🇹🇭
               </button>
+              </div>
+              <div className="flex shrink-0 items-center gap-1">
+                <Link
+                  href="/profile/vocabulary"
+                  className="flex h-8 w-8 items-center justify-center rounded-none border-2 border-black bg-white text-sm font-bold shadow-[2px_2px_0px_black]"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label="My vocabulary"
+                  title="My vocabulary"
+                >
+                  📘
+                </Link>
+                <Link
+                  href="/profile/clips"
+                  className="flex h-8 w-8 items-center justify-center rounded-none border-2 border-black bg-white text-sm font-bold shadow-[2px_2px_0px_black]"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label="My clips"
+                  title="My clips"
+                >
+                  ✂
+                </Link>
+              </div>
             </div>
             {(recognizedText || pronunciationFeedback) && (
               <div className="mt-1.5 space-y-0.5">
@@ -1361,7 +1377,7 @@ export function VideoSlide({
                         selectedSubtitleWord.toLowerCase()
                     );
                   return (
-                    <div className="mt-3 flex flex-col gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       <button
                         type="button"
                         disabled={saved}
@@ -1397,22 +1413,6 @@ export function VideoSlide({
                           Clip Sentence
                         </button>
                       ) : null}
-                      <div className="flex justify-center gap-3 text-xs">
-                        <Link
-                          href="/profile/vocabulary"
-                          className="font-bold text-black underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          My vocabulary
-                        </Link>
-                        <Link
-                          href="/profile/clips"
-                          className="font-bold text-black underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          My clips
-                        </Link>
-                      </div>
                     </div>
                   );
                 })()}
@@ -1459,7 +1459,7 @@ export function VideoSlide({
 
       {/* Floating vertical action rail */}
       <div
-        className="absolute right-3 top-4 z-10 flex flex-col items-center gap-3"
+        className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center justify-center gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
@@ -1644,54 +1644,6 @@ export function VideoSlide({
                   >
                     <Heart
                       className={`h-[22px] w-[22px] stroke-[2.5] ${isLiked ? "fill-white text-white" : ""}`}
-                      aria-hidden
-                    />
-                  </button>
-                </div>
-                <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-                    Save
-                  </span>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const next = !isSaved;
-                      setIsSaved(next);
-                      if (!userId) {
-                        return;
-                      }
-                      try {
-                        if (next) {
-                          await fetch("/api/saves", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ userId, lessonId: lesson.id }),
-                          });
-                          addSavedLesson({
-                            id: lesson.id,
-                            title: lesson.title,
-                            videoUrl: lesson.videoUrl,
-                            thumbnailUrl: lesson.thumbnailUrl,
-                          });
-                          trackEvent("save", lesson.id, {}, userId ?? null);
-                        } else {
-                          await fetch(
-                            `/api/saves?userId=${encodeURIComponent(
-                              userId
-                            )}&lessonId=${encodeURIComponent(lesson.id)}`,
-                            { method: "DELETE" }
-                          );
-                          removeSavedLesson(lesson.id);
-                        }
-                      } catch {
-                        // ignore network errors; UI state already updated optimistically
-                      }
-                    }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-                    aria-label={isSaved ? "Unsave" : "Save"}
-                  >
-                    <Bookmark
-                      className={`h-[22px] w-[22px] stroke-[2.5] ${isSaved ? "fill-black text-black" : ""}`}
                       aria-hidden
                     />
                   </button>
