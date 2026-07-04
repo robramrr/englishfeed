@@ -47,7 +47,7 @@ export function AppHeader() {
     "flex h-10 w-10 items-center justify-center text-brand-navy transition hover:opacity-80";
 
   return (
-    <header className="comic-bg-header-stripes comic-border-b-4 comic-shadow-xl fixed inset-x-0 top-0 z-50 flex h-[var(--header-height)] items-center justify-between px-3">
+    <header className="comic-bg-header-stripes comic-border-b-2 comic-shadow-xl fixed inset-x-0 top-0 z-50 flex h-[var(--header-height)] items-center justify-between px-3 md:comic-border-b-4">
       <Link
         href="/profile"
         className={headerBtnClass}

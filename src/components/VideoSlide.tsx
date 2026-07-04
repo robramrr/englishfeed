@@ -1164,7 +1164,7 @@ export function VideoSlide({
           <button
             type="button"
             onClick={handleSoundClick}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
+            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 md:flex"
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
@@ -1176,6 +1176,22 @@ export function VideoSlide({
           </div>
 
         </div>
+      )}
+
+      {/* Mobile mute — right gutter, outside video frame */}
+      {showChrome && !videoError && (
+        <button
+          type="button"
+          onClick={handleSoundClick}
+          className="fixed right-[max(0.5rem,env(safe-area-inset-right))] bottom-[calc(var(--video-dock-bottom)+0.75rem)] z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 md:hidden"
+          aria-label={isMuted ? "Unmute" : "Mute"}
+        >
+          {isMuted ? (
+            <VolumeX className="h-6 w-6 stroke-[2.25]" aria-hidden />
+          ) : (
+            <Volume2 className="h-6 w-6 stroke-[2.25]" aria-hidden />
+          )}
+        </button>
       )}
 
       {/* Small popup overlay for selected subtitle word */}

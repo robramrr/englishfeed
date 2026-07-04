@@ -138,6 +138,10 @@ html.feed-locked body {
   border: var(--comic-border-thick);
 }
 
+.comic-border-b-2 {
+  border-bottom: 2px solid var(--brand-navy);
+}
+
 .comic-border-b-4 {
   border-bottom: 4px solid var(--brand-navy);
 }

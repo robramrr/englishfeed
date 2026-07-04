@@ -26,7 +26,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
         <AppHeader />
       ) : reserveHeader ? (
         <div
-          className="comic-bg-header-stripes comic-border-b-4 fixed inset-x-0 top-0 z-50 h-[var(--header-height)]"
+          className="comic-bg-header-stripes comic-border-b-2 fixed inset-x-0 top-0 z-50 h-[var(--header-height)] md:comic-border-b-4"
           aria-hidden
         />
       ) : null}
