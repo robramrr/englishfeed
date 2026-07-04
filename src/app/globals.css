@@ -45,7 +45,7 @@
   --video-dock-bottom: var(--nav-stack-height);
   --viewport-height: 100vh;
   --feed-viewport-height: calc(var(--viewport-height) - var(--header-height));
-  --feed-action-rail-gap: 3.5rem;
+  --feed-action-rail-gap: 4rem;
   --feed-max-width: min(100%, calc((var(--viewport-height) - var(--header-height)) * 9 / 16));
   --comic-container-max: 72rem;
 }

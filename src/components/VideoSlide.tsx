@@ -291,10 +291,12 @@ const commonWordFallbacks: Record<
 };
 
 const actionRailBtnBase =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full comic-border comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 md:h-11 md:w-11";
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95";
 const actionRailBtnPrimary = `${actionRailBtnBase} comic-bg-primary text-white`;
 const actionRailBtnSecondary = `${actionRailBtnBase} bg-white text-brand-navy`;
-const actionRailIconClass = "h-5 w-5 stroke-[2.5] md:h-[22px] md:w-[22px]";
+const actionRailIconClass = "h-[22px] w-[22px] stroke-[2.5]";
+const actionRailTooltipClass =
+  "pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100";
 
 export function VideoSlide({
   lesson,
@@ -1214,13 +1216,13 @@ export function VideoSlide({
           suppressHydrationWarning
         >
           <div
-            className="max-h-[min(70dvh,420px)] w-full max-w-sm overflow-y-auto rounded-none comic-border bg-white px-3 py-3 comic-shadow-sm sm:px-4"
+            className="max-h-[min(70dvh,420px)] w-full max-w-[min(100%,20rem)] overflow-y-auto rounded-none comic-border bg-white px-3 py-3 comic-shadow-sm sm:max-w-sm sm:px-4"
             onClick={(e) => e.stopPropagation()}
             suppressHydrationWarning
           >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex min-w-0 flex-1 items-center gap-2">
-                <p className="min-w-0 truncate text-lg font-bold capitalize text-brand-navy">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+                <p className="min-w-0 break-words text-base font-bold capitalize text-brand-navy sm:truncate sm:text-lg">
                   {selectedSubtitleWord}
                 </p>
                 <button
@@ -1351,7 +1353,7 @@ export function VideoSlide({
                   <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                     Definition
                   </p>
-                  <p className="mt-0.5 text-sm font-medium text-brand-navy">
+                  <p className="mt-0.5 text-xs font-medium leading-relaxed text-brand-navy sm:text-sm">
                     {contextResult.contextDefinition}
                   </p>
                   {showThaiTranslation && (
@@ -1371,7 +1373,7 @@ export function VideoSlide({
                     <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                       Synonyms
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-brand-navy">
+                    <p className="mt-0.5 text-xs font-medium leading-relaxed text-brand-navy sm:text-sm">
                       {contextResult.synonyms.join(", ")}
                     </p>
                     {showThaiTranslation && (
@@ -1392,7 +1394,7 @@ export function VideoSlide({
                     <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                       Example
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-brand-navy">
+                    <p className="mt-0.5 text-xs font-medium leading-relaxed text-brand-navy sm:text-sm">
                       {contextResult.examples[0]}
                     </p>
                     {showThaiTranslation && (
@@ -1500,13 +1502,13 @@ export function VideoSlide({
       {/* Floating vertical action rail — mobile: fixed in right gutter; desktop: inside video */}
       {showChrome && !videoError && (
       <div
-        className="fixed right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(var(--header-height)+1rem)] z-20 flex flex-col items-center gap-2 md:absolute md:right-3 md:left-auto md:top-1/2 md:-translate-y-1/2 md:gap-3"
+        className="fixed right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(var(--header-height)+1rem)] z-20 flex flex-col items-center gap-3 md:absolute md:right-3 md:left-auto md:top-1/2 md:-translate-y-1/2"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className={actionRailTooltipClass}>
                       Quiz
                     </span>
                     <button
@@ -1521,7 +1523,7 @@ export function VideoSlide({
                 )}
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className={actionRailTooltipClass}>
                       Speak
                     </span>
                     <button
@@ -1569,7 +1571,7 @@ export function VideoSlide({
                 )}
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className={actionRailTooltipClass}>
                       Vocabulary
                     </span>
                     <button
@@ -1613,7 +1615,7 @@ export function VideoSlide({
                   </div>
                 )}
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className={actionRailTooltipClass}>
                     Camera vocab
                   </span>
                   <button
@@ -1629,7 +1631,7 @@ export function VideoSlide({
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className={actionRailTooltipClass}>
                     AI Tutor
                   </span>
                   <button
@@ -1642,7 +1644,7 @@ export function VideoSlide({
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className={actionRailTooltipClass}>
                     Like
                   </span>
                   <button
@@ -1690,7 +1692,7 @@ export function VideoSlide({
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className={actionRailTooltipClass}>
                     Comment
                   </span>
                   <Link

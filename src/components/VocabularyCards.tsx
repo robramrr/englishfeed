@@ -66,12 +66,12 @@ export function VocabularyCards({
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-sm"
+        className="flex max-h-[min(88dvh,720px)] w-full max-w-[min(100%,24rem)] flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-sm sm:max-w-md"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
         <div className="flex shrink-0 items-center gap-2 comic-border-b-4 p-3">
-          <h2 className="min-w-0 truncate text-base font-bold text-brand-navy sm:text-lg">
+          <h2 className="min-w-0 truncate text-sm font-bold text-brand-navy sm:text-lg">
             Vocabulary
           </h2>
           <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -136,11 +136,11 @@ export function VocabularyCards({
               <p className="text-xs font-bold text-brand-navy sm:text-sm">
                 {index + 1} / {total}
               </p>
-              <div className="flex items-start justify-between gap-2">
-                <p className="min-w-0 flex-1 break-words text-xl font-bold text-brand-navy sm:text-2xl">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <p className="min-w-0 break-words text-lg font-bold leading-snug text-brand-navy sm:text-2xl">
                   {card.word}
                 </p>
-                <div className="flex shrink-0 items-center gap-1">
+                <div className="flex shrink-0 flex-wrap items-center gap-1 sm:justify-end">
                   <button
                     type="button"
                     onClick={() => speakWord(card.word)}
@@ -192,18 +192,20 @@ export function VocabularyCards({
               </div>
 
               {card.partOfSpeech && (
-                <p className="text-sm italic font-bold text-brand-navy">
+                <p className="text-xs italic font-bold text-brand-navy sm:text-sm">
                   {card.partOfSpeech}
                 </p>
               )}
-              <p className="text-sm font-bold text-brand-navy">{card.definition}</p>
+              <p className="text-xs font-bold leading-relaxed text-brand-navy sm:text-sm">
+                {card.definition}
+              </p>
               {card.example && (
-                <p className="text-sm italic font-bold text-brand-navy">
+                <p className="text-xs italic font-bold leading-relaxed text-brand-navy sm:text-sm">
                   &ldquo;{card.example}&rdquo;
                 </p>
               )}
               {showThaiTranslation && card.thai && (
-                <p className="text-sm font-bold text-brand-navy">{card.thai}</p>
+                <p className="text-xs font-bold leading-relaxed text-brand-navy sm:text-sm">{card.thai}</p>
               )}
             </div>
           )}

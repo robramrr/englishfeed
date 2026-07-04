@@ -457,17 +457,17 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(90dvh,640px)] w-full max-w-md flex-col rounded-none comic-border bg-white text-brand-navy comic-shadow-sm"
+        className="flex max-h-[min(90dvh,640px)] w-full max-w-[min(100%,24rem)] flex-col rounded-none comic-border bg-white text-brand-navy comic-shadow-sm sm:max-w-md"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
         <div className="flex shrink-0 items-start justify-between gap-3 comic-border-b-4 p-4">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-base font-bold text-brand-navy">
+            <div className="flex items-center gap-2 text-sm font-bold text-brand-navy sm:text-base">
               <Bot className="h-4 w-4 shrink-0" aria-hidden />
               Role-play tutor
             </div>
-            <div className="mt-1 truncate text-sm font-medium text-zinc-600">
+            <div className="mt-1 truncate text-xs font-medium text-zinc-600 sm:text-sm">
               {context.lessonTitle}
             </div>
           </div>
@@ -483,7 +483,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           {loading && (
-            <p className="text-center text-base font-bold text-zinc-600">
+            <p className="text-center text-sm font-bold text-zinc-600 sm:text-base">
               Starting scene from this video…
             </p>
           )}
@@ -505,7 +505,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
           {!!latestTutorLine && (
             <div className="mb-3 rounded-none comic-border bg-white px-3 py-2">
               <div className="flex items-start gap-2">
-                <p className="min-w-0 flex-1 text-base font-semibold leading-snug text-brand-navy">
+                <p className="min-w-0 flex-1 text-sm font-semibold leading-snug text-brand-navy sm:text-base">
                   {latestTutorLine}
                 </p>
                 <div className="flex shrink-0 items-center gap-1">
@@ -552,7 +552,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
             {turns.filter((t) => t.role === "user").map((t, i) => (
               <div
                 key={`${t.role}-${i}`}
-                className="ml-4 rounded-none comic-border bg-zinc-100 px-3 py-2 text-base leading-snug text-brand-navy"
+                className="ml-4 rounded-none comic-border bg-zinc-100 px-3 py-2 text-sm leading-snug text-brand-navy sm:text-base"
               >
                 <span className="mb-1 block text-xs font-bold uppercase tracking-wide text-zinc-500">
                   You

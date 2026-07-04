@@ -57,14 +57,14 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="flex max-h-[min(92dvh,calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-1rem))] w-full max-w-lg flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-md sm:max-h-[min(88dvh,720px)]"
+        className="flex max-h-[min(92dvh,calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-1rem))] w-full max-w-[min(100%,24rem)] flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-md sm:max-h-[min(88dvh,720px)] sm:max-w-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="comic-border-b-4 flex shrink-0 items-center justify-between gap-2 p-3">
           <div className="flex min-w-0 items-center gap-2">
             <Camera className="h-5 w-5 shrink-0" aria-hidden />
             <div className="min-w-0">
-              <h2 className="truncate text-base font-bold">Camera vocab</h2>
+              <h2 className="truncate text-sm font-bold sm:text-base">Camera vocab</h2>
               {quiz?.lessonTitle && (
                 <p className="truncate text-xs font-medium text-zinc-600">
                   {quiz.lessonTitle}

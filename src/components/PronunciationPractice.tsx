@@ -463,12 +463,12 @@ export function PronunciationPractice({
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden comic-border bg-white text-brand-navy comic-shadow-sm rounded-none"
+        className="flex max-h-[min(88dvh,720px)] w-full max-w-[min(100%,24rem)] flex-col overflow-hidden comic-border bg-white text-brand-navy comic-shadow-sm rounded-none sm:max-w-md"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
         <div className="flex shrink-0 items-center justify-between comic-border-b-4 p-3 sm:p-4">
-          <h2 className="min-w-0 truncate text-base font-bold text-brand-navy sm:text-lg">
+          <h2 className="min-w-0 truncate text-sm font-bold text-brand-navy sm:text-lg">
             Pronunciation Practice
           </h2>
           <button
@@ -485,7 +485,7 @@ export function PronunciationPractice({
           <p className="text-sm font-bold text-brand-navy">Say this sentence:</p>
           <div className="rounded-none comic-border bg-white px-3 py-2">
             <div className="flex items-start gap-2">
-              <p className="min-w-0 flex-1 font-semibold leading-snug text-brand-navy">
+              <p className="min-w-0 flex-1 text-sm font-semibold leading-snug text-brand-navy sm:text-base">
                 {expectedSentence.trim() || "Loading practice sentence…"}
               </p>
               <div className="flex shrink-0 items-center gap-1">
@@ -600,7 +600,7 @@ export function PronunciationPractice({
                 <p className="text-sm font-bold text-brand-navy">
                   Pronunciation Score
                 </p>
-                <p className="text-3xl font-bold text-brand-navy">
+                <p className="text-2xl font-bold text-brand-navy sm:text-3xl">
                   {result.score}/100
                 </p>
               </div>
