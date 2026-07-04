@@ -2,20 +2,45 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { User } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Rss, User } from "lucide-react";
 import { ENGLISHFEED_LOGO_URL } from "@/lib/brand";
 import { requestFeedScrollToStart } from "@/lib/feedNavigation";
+import { useLevelFilter } from "@/lib/LevelFilterContext";
 
 export function AppHeader() {
   const pathname = usePathname();
   const router = useRouter();
+  const { pickerOpen, setPickerOpen, togglePicker } = useLevelFilter();
+  const openPickerOnFeedRef = useRef(false);
+
+  useEffect(() => {
+    if (pathname === "/" && openPickerOnFeedRef.current) {
+      openPickerOnFeedRef.current = false;
+      setPickerOpen(true);
+      return;
+    }
+    if (pathname !== "/") {
+      setPickerOpen(false);
+    }
+  }, [pathname, setPickerOpen]);
 
   const handleHomeClick = () => {
+    setPickerOpen(false);
     if (pathname === "/") {
       requestFeedScrollToStart();
       return;
     }
     router.push("/");
+  };
+
+  const handleFeedLevelClick = () => {
+    if (pathname !== "/") {
+      openPickerOnFeedRef.current = true;
+      router.push("/");
+      return;
+    }
+    togglePicker();
   };
 
   return (
@@ -41,7 +66,18 @@ export function AppHeader() {
         />
       </button>
 
-      <span className="h-10 w-10 shrink-0" aria-hidden />
+      <button
+        type="button"
+        onClick={handleFeedLevelClick}
+        className={`flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-zinc-100 ${
+          pickerOpen ? "bg-zinc-100 text-black" : "text-zinc-800"
+        }`}
+        aria-label="Feed level"
+        aria-expanded={pickerOpen}
+        aria-haspopup="listbox"
+      >
+        <Rss className="h-5 w-5" strokeWidth={2.25} aria-hidden />
+      </button>
     </header>
   );
 }

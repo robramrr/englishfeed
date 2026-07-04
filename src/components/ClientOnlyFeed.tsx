@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { EnglishLevel } from "@/types/lesson";
+import { LevelPickerOverlay } from "@/components/LevelPickerOverlay";
+import { useLevelFilter } from "@/lib/LevelFilterContext";
 import { VideoFeed } from "./VideoFeed";
 
 interface ClientOnlyFeedProps {
@@ -17,7 +19,7 @@ interface ClientOnlyFeedProps {
  */
 export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
   const [mounted, setMounted] = useState(false);
-  const [levelFilter, setLevelFilter] = useState<EnglishLevel>("beginner");
+  const { levelFilter, setLevelFilter } = useLevelFilter();
   const searchParams = useSearchParams();
   useEffect(() => setMounted(true), []);
 
@@ -39,7 +41,7 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, setLevelFilter]);
 
   const handleLevelChange = useCallback(
     (level: EnglishLevel) => {
@@ -53,7 +55,7 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
         // ignore
       });
     },
-    [userId]
+    [userId, setLevelFilter]
   );
 
   const videoId = searchParams.get("video") ?? undefined;
@@ -91,9 +93,9 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
         initialVideoId={videoId}
         initialSeekTime={Number.isFinite(seekTime) ? seekTime : undefined}
         levelFilter={levelFilter}
-        onLevelFilterChange={handleLevelChange}
         userId={userId}
       />
+      <LevelPickerOverlay onSelect={handleLevelChange} />
     </main>
   );
 }

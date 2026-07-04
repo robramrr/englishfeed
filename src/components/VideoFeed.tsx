@@ -9,7 +9,6 @@ interface VideoFeedProps {
   initialVideoId?: string;
   initialSeekTime?: number;
   levelFilter: EnglishLevel;
-  onLevelFilterChange?: (level: EnglishLevel) => void;
   /** When set, topic preferences are fetched and used to boost preferred topics. */
   userId?: string | null;
 }
@@ -108,7 +107,6 @@ export function VideoFeed({
   initialVideoId,
   initialSeekTime,
   levelFilter,
-  onLevelFilterChange,
   userId,
 }: VideoFeedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -280,8 +278,6 @@ export function VideoFeed({
               initialSeekTime={
                 lesson.id === initialVideoId ? initialSeekTime : undefined
               }
-              levelFilter={levelFilter}
-              onLevelFilterChange={onLevelFilterChange}
               userId={userId}
             />
           </div>

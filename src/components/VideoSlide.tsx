@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type {
-  EnglishLevel,
   Lesson,
   PracticeQuestion,
   VocabularyItem,
@@ -48,7 +47,6 @@ import {
   Info,
   MessageCircle,
   Mic,
-  SlidersHorizontal,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -97,20 +95,12 @@ const CONTEXT_STOPWORDS = new Set([
   "he", "she", "them", "our", "us", "me", "my", "his", "her", "their"
 ]);
 
-const LEVEL_OPTIONS: { value: EnglishLevel; label: string }[] = [
-  { value: "beginner", label: "Foundation" },
-  { value: "intermediate", label: "Conversational" },
-  { value: "advanced", label: "Advanced" },
-];
-
 interface VideoSlideProps {
   lesson: Lesson;
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   scrollContainerReady?: boolean;
   /** When set, seek the video to this time (e.g. from a clip link). */
   initialSeekTime?: number;
-  levelFilter?: EnglishLevel;
-  onLevelFilterChange?: (level: EnglishLevel) => void;
   /** Authenticated Supabase user id, used for analytics. */
   userId?: string | null;
 }
@@ -306,13 +296,10 @@ export function VideoSlide({
   scrollContainerRef,
   scrollContainerReady = false,
   initialSeekTime,
-  levelFilter,
-  onLevelFilterChange,
   userId,
 }: VideoSlideProps) {
   const [videoError, setVideoError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [levelPopoverOpen, setLevelPopoverOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -1035,20 +1022,16 @@ export function VideoSlide({
         >
           {currentWords.length > 0 && (
             <div className="pointer-events-none px-3 pr-[4.75rem] pb-1 md:px-4 md:pr-4">
-              <div className="pointer-events-auto mx-auto flex h-8 w-full max-w-full items-center rounded-md border border-black/50 bg-black/82 px-2 shadow-[0_2px_10px_rgba(0,0,0,0.55)] backdrop-blur-[2px] md:h-[2.85rem] md:max-w-[24rem] md:px-3">
-                <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 md:text-base md:leading-[1.35rem] lg:text-lg">
+              <div className="pointer-events-auto mx-auto flex h-8 w-full max-w-full items-center rounded-none border-2 border-black bg-white px-2 shadow-[3px_3px_0px_black] md:h-[2.85rem] md:max-w-[24rem] md:px-3">
+                <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 text-black md:text-base md:leading-[1.35rem] lg:text-lg">
                   {currentWords.map((w, i) => (
                     <span
                       key={`${i}-${w.start}`}
                       role="button"
                       tabIndex={0}
                       className={`cursor-pointer rounded-sm px-0.5 transition-colors duration-75 hover:underline ${
-                        i === activeWordIndex ? "text-yellow-300" : "text-white"
+                        i === activeWordIndex ? "text-blue-600" : "text-black"
                       }`}
-                      style={{
-                        textShadow:
-                          "0 1px 2px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85)",
-                      }}
                       onClick={(e) => {
                         e.stopPropagation();
                         const sentence = currentWords.map((x) => x.word).join(" ");
@@ -1159,6 +1142,18 @@ export function VideoSlide({
               />
             </div>
           </div>
+          <button
+            type="button"
+            onClick={handleSoundClick}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <VolumeX className="h-6 w-6 stroke-[2.25]" aria-hidden />
+            ) : (
+              <Volume2 className="h-6 w-6 stroke-[2.25]" aria-hidden />
+            )}
+          </button>
           </div>
 
         </div>
@@ -1468,62 +1463,6 @@ export function VideoSlide({
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
-                {onLevelFilterChange != null && levelFilter != null && (
-                  <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-                      Level
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setLevelPopoverOpen((open) => !open)}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-                      aria-label="Level filter"
-                      aria-expanded={levelPopoverOpen}
-                      aria-haspopup="listbox"
-                    >
-                      <SlidersHorizontal className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-                    </button>
-                    {levelPopoverOpen && (
-                      <>
-                        <div
-                          className="fixed inset-0 z-10"
-                          aria-hidden
-                          onClick={() => setLevelPopoverOpen(false)}
-                        />
-                        <div
-                          className="absolute right-full top-1/2 z-20 mr-2 min-w-[11rem] -translate-y-1/2 rounded-none border-2 border-black bg-white py-0 shadow-[3px_3px_0px_black]"
-                          role="listbox"
-                          aria-label="Select level"
-                        >
-                          {LEVEL_OPTIONS.map(({ value, label }) => (
-                            <button
-                              key={value}
-                              type="button"
-                              role="option"
-                              aria-selected={levelFilter === value}
-                              onClick={() => {
-                                onLevelFilterChange(value);
-                                setLevelPopoverOpen(false);
-                              }}
-                              className={`flex w-full items-center gap-2 border-b-2 border-black px-3 py-2 text-left text-sm font-bold transition last:border-b-0 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-[0.99] ${
-                                levelFilter === value
-                                  ? "bg-black text-white"
-                                  : "bg-white text-black hover:bg-zinc-100"
-                              }`}
-                            >
-                              {levelFilter === value ? (
-                                <span className="text-xs" aria-hidden>✓</span>
-                              ) : (
-                                <span className="w-3" />
-                              )}
-                              {label}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
                     <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
@@ -1755,23 +1694,6 @@ export function VideoSlide({
                       className={`h-[22px] w-[22px] stroke-[2.5] ${isSaved ? "fill-black text-black" : ""}`}
                       aria-hidden
                     />
-                  </button>
-                </div>
-                <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-                    Listen
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleSoundClick}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-                    aria-label={isMuted ? "Unmute" : "Mute"}
-                  >
-                    {isMuted ? (
-                      <VolumeX className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-                    ) : (
-                      <Volume2 className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-                    )}
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
