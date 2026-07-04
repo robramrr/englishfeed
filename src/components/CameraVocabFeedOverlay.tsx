@@ -82,7 +82,7 @@ export function CameraVocabFeedOverlay({
         </div>
       )}
       {!faceReady && !camError && !finished && (
-        <div className="pointer-events-none absolute bottom-2 left-2 rounded border-2 border-black bg-white/90 px-2 py-1 text-[10px] font-bold text-black">
+        <div className="pointer-events-none absolute bottom-2 left-2 rounded comic-border bg-white/90 px-2 py-1 text-[10px] font-bold text-brand-navy">
           Starting camera…
         </div>
       )}

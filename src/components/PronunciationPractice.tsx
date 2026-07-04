@@ -463,18 +463,18 @@ export function PronunciationPractice({
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] rounded-none"
+        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden comic-border bg-white text-brand-navy comic-shadow-sm rounded-none"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
-        <div className="flex shrink-0 items-center justify-between border-b-2 border-black p-3 sm:p-4">
-          <h2 className="min-w-0 truncate text-base font-bold text-black sm:text-lg">
+        <div className="flex shrink-0 items-center justify-between comic-border-b-4 p-3 sm:p-4">
+          <h2 className="min-w-0 truncate text-base font-bold text-brand-navy sm:text-lg">
             Pronunciation Practice
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-none border-2 border-black bg-white px-2 py-1 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+            className="rounded-none comic-border bg-white px-2 py-1 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
             aria-label="Close"
           >
             ✕
@@ -482,10 +482,10 @@ export function PronunciationPractice({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto space-y-4 p-3 sm:p-4">
-          <p className="text-sm font-bold text-black">Say this sentence:</p>
-          <div className="rounded-none border-2 border-black bg-white px-3 py-2">
+          <p className="text-sm font-bold text-brand-navy">Say this sentence:</p>
+          <div className="rounded-none comic-border bg-white px-3 py-2">
             <div className="flex items-start gap-2">
-              <p className="min-w-0 flex-1 font-semibold leading-snug text-black">
+              <p className="min-w-0 flex-1 font-semibold leading-snug text-brand-navy">
                 {expectedSentence.trim() || "Loading practice sentence…"}
               </p>
               <div className="flex shrink-0 items-center gap-1">
@@ -493,7 +493,7 @@ export function PronunciationPractice({
                   type="button"
                   onClick={() => speakWord(expectedSentence.trim())}
                   disabled={!expectedSentence.trim()}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40"
                   aria-label="Play sentence audio"
                 >
                   <SpeakerIcon className="h-5 w-5" />
@@ -501,7 +501,7 @@ export function PronunciationPractice({
                 <button
                   type="button"
                   onClick={handleThaiToggle}
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-base text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-base text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
                     showThaiTranslation ? "opacity-100" : "opacity-70"
                   }`}
                   aria-label={
@@ -515,11 +515,11 @@ export function PronunciationPractice({
               </div>
             </div>
             {showThaiTranslation && (
-              <div className="mt-2 border-t-2 border-black pt-2">
+              <div className="mt-2 comic-border-t-4 pt-2">
                 {thaiLoading ? (
-                  <p className="text-sm font-medium text-black">Translating…</p>
+                  <p className="text-sm font-medium text-brand-navy">Translating…</p>
                 ) : thaiSentence ? (
-                  <p className="text-sm font-medium text-black">{thaiSentence}</p>
+                  <p className="text-sm font-medium text-brand-navy">{thaiSentence}</p>
                 ) : (
                   <p className="text-sm font-medium text-zinc-500">
                     Translation unavailable.
@@ -533,7 +533,7 @@ export function PronunciationPractice({
             ref={waveContainerRef}
             className={`w-full overflow-hidden bg-white transition-[height,border-width] ${
               status === "recording"
-                ? "h-14 border-2 border-black"
+                ? "h-14 comic-border"
                 : "h-0 border-0"
             }`}
             aria-hidden={status !== "recording"}
@@ -557,7 +557,7 @@ export function PronunciationPractice({
               type="button"
               onClick={startRecording}
               disabled={!expectedSentence.trim()}
-              className="w-full rounded-none border-2 border-black bg-white py-3 text-base font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+              className="w-full rounded-none comic-border bg-white py-3 text-base font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
             >
               <Mic className="mr-2 inline-block h-5 w-5 stroke-[2.5]" aria-hidden />
               {label}
@@ -568,7 +568,7 @@ export function PronunciationPractice({
             <button
               type="button"
               onClick={stopRecording}
-              className="w-full rounded-none border-2 border-black bg-red-500 py-3 text-base font-bold text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+              className="w-full rounded-none comic-border bg-brand-red py-3 text-base font-bold text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
             >
               <Mic className="mr-2 inline-block h-5 w-5 stroke-[2.5]" aria-hidden />
               {label}
@@ -576,7 +576,7 @@ export function PronunciationPractice({
           )}
 
           {status === "processing" && (
-            <div className="py-2 text-center text-black font-bold">
+            <div className="py-2 text-center text-brand-navy font-bold">
               Checking pronunciation...
             </div>
           )}
@@ -587,7 +587,7 @@ export function PronunciationPractice({
               <button
                 type="button"
                 onClick={handleBack}
-                className="rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                className="rounded-none comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               >
                 Try again
               </button>
@@ -597,24 +597,24 @@ export function PronunciationPractice({
           {status === "result" && result && (
             <div className="space-y-4">
               <div className="text-center">
-                <p className="text-sm font-bold text-black">
+                <p className="text-sm font-bold text-brand-navy">
                   Pronunciation Score
                 </p>
-                <p className="text-3xl font-bold text-black">
+                <p className="text-3xl font-bold text-brand-navy">
                   {result.score}/100
                 </p>
               </div>
               {result.transcript && (
-                <p className="text-sm font-bold text-black">
+                <p className="text-sm font-bold text-brand-navy">
                   Heard:{" "}
-                  <span className="text-black">{result.transcript}</span>
+                  <span className="text-brand-navy">{result.transcript}</span>
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 {result.feedback.map((item, i) => (
                   <span
                     key={`${i}-${item.word}`}
-                    className={`inline-flex items-center gap-1 rounded-none border-2 border-black px-1.5 py-0.5 text-sm font-bold ${
+                    className={`inline-flex items-center gap-1 rounded-none comic-border px-1.5 py-0.5 text-sm font-bold ${
                       item.correct
                         ? "bg-emerald-100 text-emerald-800"
                         : "bg-red-100 text-red-800"
@@ -625,18 +625,18 @@ export function PronunciationPractice({
                 ))}
               </div>
               {result.accentInsight && (
-                <div className="space-y-2 border-2 border-black bg-amber-50 p-3">
-                  <p className="text-xs font-bold uppercase tracking-wide text-black">
+                <div className="space-y-2 comic-border bg-amber-50 p-3">
+                  <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                     Experimental Accent Insight
                   </p>
                   <ul className="space-y-1">
-                    <li className="text-sm font-medium text-black">
+                    <li className="text-sm font-medium text-brand-navy">
                       - {normalizeShortLine(result.accentInsight.shortLine, 75)}
                     </li>
                     {result.accentInsight.tips.map((tip, idx) => (
                       <li
                         key={`${idx}-${tip}`}
-                        className="text-sm font-medium text-black"
+                        className="text-sm font-medium text-brand-navy"
                       >
                         - {tip}
                       </li>
@@ -647,7 +647,7 @@ export function PronunciationPractice({
               <button
                 type="button"
                 onClick={handleBack}
-                className="w-full rounded-none border-2 border-black bg-white py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                className="w-full rounded-none comic-border bg-white py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               >
                 Record again
               </button>

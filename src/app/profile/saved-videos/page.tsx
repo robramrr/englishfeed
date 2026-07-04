@@ -13,7 +13,7 @@ function VideoThumbnail({ item }: { item: StoredLessonItem }) {
   return (
     <Link
       href={href}
-      className="block overflow-hidden rounded-none border-2 border-black bg-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+      className="block overflow-hidden rounded-none comic-border bg-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
       aria-label={`Play ${item.title}`}
     >
       <VideoThumbnailImage
@@ -80,24 +80,24 @@ export default function SavedVideosPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-white text-black">
-      <header className="shrink-0 border-b-2 border-black bg-white px-4 py-3">
+    <div className="min-h-[var(--feed-viewport-height)] overflow-y-auto text-brand-navy">
+      <header className="shrink-0 comic-border-b-4 comic-bg-header-stripes px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center justify-between">
           <Link
             href="/profile"
-            className="text-sm font-bold text-black underline"
+            className="text-sm font-bold text-brand-navy underline"
             aria-label="Back to profile"
           >
             ← Back
           </Link>
-          <h1 className="text-lg font-bold text-black">Saved Videos</h1>
+          <h1 className="text-lg font-bold text-brand-navy">Saved Videos</h1>
           <span className="w-12" aria-hidden />
         </div>
       </header>
       <main>
         <div className="mx-auto max-w-lg px-4 py-6">
           {items.length === 0 ? (
-            <p className="text-sm font-bold text-black">
+            <p className="text-sm font-bold text-brand-navy">
               Save videos from the feed to see them here.
             </p>
           ) : (

@@ -76,12 +76,16 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
 
   return (
     <div
-      className="fixed inset-x-0 bg-black"
+      className="fixed inset-x-0 z-10"
       style={feedShellStyle}
       suppressHydrationWarning
     >
+      <div
+        className="comic-bg-edtech-innovations pointer-events-none absolute inset-0"
+        aria-hidden
+      />
       <main
-        className="relative mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
+        className="relative z-10 mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
         suppressHydrationWarning
       >
         {settingsReady ? (
@@ -104,12 +108,16 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
 export function FeedShellPlaceholder() {
   return (
     <div
-      className="fixed inset-x-0 bg-black"
+      className="fixed inset-x-0 z-10"
       style={feedShellStyle}
       suppressHydrationWarning
     >
+      <div
+        className="comic-bg-edtech-innovations pointer-events-none absolute inset-0"
+        aria-hidden
+      />
       <main
-        className="relative mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
+        className="relative z-10 mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
         suppressHydrationWarning
       />
     </div>

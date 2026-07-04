@@ -23,10 +23,10 @@ type VocabularyCardsProps = {
 };
 
 const quickLinkClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-sm font-bold text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg comic-border bg-white text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95";
 
 const actionBtnClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-60 disabled:pointer-events-none";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-60 disabled:pointer-events-none";
 
 export function VocabularyCards({
   vocabulary,
@@ -66,12 +66,12 @@ export function VocabularyCards({
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black]"
+        className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-sm"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
-        <div className="flex shrink-0 items-center gap-2 border-b-2 border-black p-3">
-          <h2 className="min-w-0 truncate text-base font-bold text-black sm:text-lg">
+        <div className="flex shrink-0 items-center gap-2 comic-border-b-4 p-3">
+          <h2 className="min-w-0 truncate text-base font-bold text-brand-navy sm:text-lg">
             Vocabulary
           </h2>
           <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -115,7 +115,7 @@ export function VocabularyCards({
 
         <div className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-4">
           {loading && (
-            <div className="flex flex-col items-center justify-center py-8 font-bold text-black">
+            <div className="flex flex-col items-center justify-center py-8 font-bold text-brand-navy">
               <p>Extracting vocabulary…</p>
             </div>
           )}
@@ -125,7 +125,7 @@ export function VocabularyCards({
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-4 rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                className="mt-4 rounded-lg comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               >
                 Close
               </button>
@@ -133,11 +133,11 @@ export function VocabularyCards({
           )}
           {!loading && !error && card && (
             <div className="space-y-3">
-              <p className="text-xs font-bold text-black sm:text-sm">
+              <p className="text-xs font-bold text-brand-navy sm:text-sm">
                 {index + 1} / {total}
               </p>
               <div className="flex items-start justify-between gap-2">
-                <p className="min-w-0 flex-1 break-words text-xl font-bold text-black sm:text-2xl">
+                <p className="min-w-0 flex-1 break-words text-xl font-bold text-brand-navy sm:text-2xl">
                   {card.word}
                 </p>
                 <div className="flex shrink-0 items-center gap-1">
@@ -192,28 +192,28 @@ export function VocabularyCards({
               </div>
 
               {card.partOfSpeech && (
-                <p className="text-sm italic font-bold text-black">
+                <p className="text-sm italic font-bold text-brand-navy">
                   {card.partOfSpeech}
                 </p>
               )}
-              <p className="text-sm font-bold text-black">{card.definition}</p>
+              <p className="text-sm font-bold text-brand-navy">{card.definition}</p>
               {card.example && (
-                <p className="text-sm italic font-bold text-black">
+                <p className="text-sm italic font-bold text-brand-navy">
                   &ldquo;{card.example}&rdquo;
                 </p>
               )}
               {showThaiTranslation && card.thai && (
-                <p className="text-sm font-bold text-black">{card.thai}</p>
+                <p className="text-sm font-bold text-brand-navy">{card.thai}</p>
               )}
             </div>
           )}
           {!loading && !error && total === 0 && (
-            <div className="py-4 text-center font-bold text-black">
+            <div className="py-4 text-center font-bold text-brand-navy">
               <p>No vocabulary extracted.</p>
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-4 rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                className="mt-4 rounded-lg comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               >
                 Close
               </button>
@@ -222,12 +222,12 @@ export function VocabularyCards({
         </div>
 
         {!loading && !error && total > 0 && (
-          <div className="flex shrink-0 items-center justify-between border-t-2 border-black p-3">
+          <div className="flex shrink-0 items-center justify-between comic-border-t-4 p-3">
             <button
               type="button"
               onClick={handlePrev}
               disabled={index === 0}
-              className="rounded-none border-2 border-black bg-white px-3 py-1.5 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:pointer-events-none sm:px-4 sm:py-2"
+              className="rounded-lg comic-border bg-white px-3 py-1.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:pointer-events-none sm:px-4 sm:py-2"
             >
               Previous
             </button>
@@ -235,7 +235,7 @@ export function VocabularyCards({
               type="button"
               onClick={handleNext}
               disabled={index === total - 1}
-              className="rounded-none border-2 border-black bg-white px-3 py-1.5 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:pointer-events-none sm:px-4 sm:py-2"
+              className="rounded-lg comic-border bg-white px-3 py-1.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:pointer-events-none sm:px-4 sm:py-2"
             >
               Next
             </button>

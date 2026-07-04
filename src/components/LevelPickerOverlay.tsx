@@ -2,6 +2,7 @@
 
 import { LEVEL_OPTIONS } from "@/lib/levelFilter";
 import { useLevelFilter } from "@/lib/LevelFilterContext";
+import { ComicText } from "@/components/comic";
 
 interface LevelPickerOverlayProps {
   onSelect?: (level: (typeof LEVEL_OPTIONS)[number]["value"]) => void;
@@ -15,7 +16,7 @@ export function LevelPickerOverlay({ onSelect }: LevelPickerOverlayProps) {
 
   return (
     <div
-      className="fixed inset-x-0 z-50 flex items-center justify-center bg-black/60 px-4"
+      className="fixed inset-x-0 z-50 flex items-center justify-center bg-brand-navy/60 px-4"
       style={{
         top: "var(--header-height)",
         bottom: 0,
@@ -24,14 +25,18 @@ export function LevelPickerOverlay({ onSelect }: LevelPickerOverlayProps) {
       role="presentation"
     >
       <div
-        className="min-w-[14rem] rounded-none border-2 border-black bg-white py-0 shadow-[4px_4px_0px_black]"
+        className="comic-card min-w-[14rem] overflow-hidden p-0"
         role="listbox"
         aria-label="Select English level"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="border-b-2 border-black px-3 py-2 text-center text-xs font-bold uppercase tracking-wide text-black">
+        <ComicText
+          as="p"
+          bold
+          className="comic-border-b-4 border-b px-3 py-3 text-center text-xs uppercase tracking-wide text-brand-navy"
+        >
           Choose your level
-        </p>
+        </ComicText>
         {LEVEL_OPTIONS.map(({ value, label }) => (
           <button
             key={value}
@@ -46,10 +51,10 @@ export function LevelPickerOverlay({ onSelect }: LevelPickerOverlayProps) {
               }
               setPickerOpen(false);
             }}
-            className={`flex w-full items-center gap-2 border-b-2 border-black px-3 py-3 text-left text-sm font-bold transition last:border-b-0 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-[0.99] ${
+            className={`flex w-full items-center gap-2 border-b-4 border-brand-navy px-3 py-3 text-left text-sm font-bold transition last:border-b-0 hover:brightness-110 active:scale-[0.99] ${
               levelFilter === value
-                ? "bg-black text-white"
-                : "bg-white text-black hover:bg-zinc-100"
+                ? "comic-bg-primary text-white"
+                : "bg-white text-brand-navy hover:bg-brand-gray/50"
             }`}
           >
             {levelFilter === value ? (

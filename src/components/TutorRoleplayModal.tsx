@@ -457,13 +457,13 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
       suppressHydrationWarning
     >
       <div
-        className="flex max-h-[min(90dvh,640px)] w-full max-w-md flex-col rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black]"
+        className="flex max-h-[min(90dvh,640px)] w-full max-w-md flex-col rounded-none comic-border bg-white text-brand-navy comic-shadow-sm"
         onClick={(e) => e.stopPropagation()}
         suppressHydrationWarning
       >
-        <div className="flex shrink-0 items-start justify-between gap-3 border-b-2 border-black p-4">
+        <div className="flex shrink-0 items-start justify-between gap-3 comic-border-b-4 p-4">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-base font-bold text-black">
+            <div className="flex items-center gap-2 text-base font-bold text-brand-navy">
               <Bot className="h-4 w-4 shrink-0" aria-hidden />
               Role-play tutor
             </div>
@@ -474,7 +474,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-none border-2 border-black bg-white px-2 py-1 text-sm font-bold shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
+            className="rounded-none comic-border bg-white px-2 py-1 text-sm font-bold comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
             aria-label="Close tutor"
           >
             ✕
@@ -493,7 +493,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold shadow-[3px_3px_0px_black]"
+                className="rounded-none comic-border bg-white px-4 py-2 text-sm font-bold comic-shadow-sm"
               >
                 Close
               </button>
@@ -503,16 +503,16 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
             <p className="mb-2 text-center text-sm font-bold text-red-700">{error}</p>
           )}
           {!!latestTutorLine && (
-            <div className="mb-3 rounded-none border-2 border-black bg-white px-3 py-2">
+            <div className="mb-3 rounded-none comic-border bg-white px-3 py-2">
               <div className="flex items-start gap-2">
-                <p className="min-w-0 flex-1 text-base font-semibold leading-snug text-black">
+                <p className="min-w-0 flex-1 text-base font-semibold leading-snug text-brand-navy">
                   {latestTutorLine}
                 </p>
                 <div className="flex shrink-0 items-center gap-1">
                   <button
                     type="button"
                     onClick={() => speakWord(latestTutorLine)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                     aria-label="Play tutor line audio"
                   >
                     <SpeakerIcon className="h-5 w-5" />
@@ -520,7 +520,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                   <button
                     type="button"
                     onClick={() => void handleTutorThaiToggle()}
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-base text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-base text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
                       showTutorThai ? "opacity-100" : "opacity-70"
                     }`}
                     aria-label={
@@ -534,11 +534,11 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                 </div>
               </div>
               {showTutorThai && (
-                <div className="mt-2 border-t-2 border-black pt-2">
+                <div className="mt-2 comic-border-t-4 pt-2">
                   {tutorThaiLoading ? (
-                    <p className="text-sm font-medium text-black">Translating…</p>
+                    <p className="text-sm font-medium text-brand-navy">Translating…</p>
                   ) : tutorThai ? (
-                    <p className="text-sm font-medium text-black">{tutorThai}</p>
+                    <p className="text-sm font-medium text-brand-navy">{tutorThai}</p>
                   ) : (
                     <p className="text-sm font-medium text-zinc-500">
                       Translation unavailable.
@@ -552,7 +552,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
             {turns.filter((t) => t.role === "user").map((t, i) => (
               <div
                 key={`${t.role}-${i}`}
-                className="ml-4 rounded-none border-2 border-black bg-zinc-100 px-3 py-2 text-base leading-snug text-black"
+                className="ml-4 rounded-none comic-border bg-zinc-100 px-3 py-2 text-base leading-snug text-brand-navy"
               >
                 <span className="mb-1 block text-xs font-bold uppercase tracking-wide text-zinc-500">
                   You
@@ -564,8 +564,8 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
           <div ref={bottomRef} />
         </div>
 
-        <div className="shrink-0 border-t-2 border-black p-3">
-          <div className="mb-3 space-y-2 rounded-none border-2 border-black bg-white p-3">
+        <div className="shrink-0 comic-border-t-4 p-3">
+          <div className="mb-3 space-y-2 rounded-none comic-border bg-white p-3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -579,7 +579,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
               }}
               disabled={loading || sending}
               placeholder={`Type your line in English (at least ${MIN_COHERENT_WORDS} words)…`}
-              className="w-full border-2 border-black bg-white px-2 py-2 text-base outline-none disabled:opacity-50"
+              className="w-full comic-border bg-white px-2 py-2 text-base outline-none disabled:opacity-50"
             />
               <>
               <div className="flex items-center gap-2">
@@ -589,7 +589,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                     if (practiceSentence) speakWord(practiceSentence);
                   }}
                   disabled={!practiceSentence}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40"
                   aria-label="Play your sentence audio"
                 >
                   <SpeakerIcon className="h-5 w-5" />
@@ -598,7 +598,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                   type="button"
                   onClick={() => void handlePracticeThaiToggle()}
                   disabled={!practiceSentence}
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-base text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40 ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-base text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-40 ${
                     showPracticeThai ? "opacity-100" : "opacity-70"
                   }`}
                   aria-label={
@@ -611,7 +611,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                 </button>
                 <div className="min-w-0 flex-1">
                   {isCurrentInputValidated ? (
-                    <div className="flex min-h-[42px] w-full items-center justify-center rounded-none border-2 border-black bg-emerald-50 px-2 py-2 text-center text-sm font-bold text-emerald-900">
+                    <div className="flex min-h-[42px] w-full items-center justify-center rounded-none comic-border bg-emerald-50 px-2 py-2 text-center text-sm font-bold text-emerald-900">
                       Ready — tap Send
                     </div>
                   ) : (
@@ -621,7 +621,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                           type="button"
                           onClick={() => void startRecording()}
                           disabled={!canRecord}
-                          className="flex w-full items-center justify-center gap-2 rounded-none border-2 border-black bg-white py-2.5 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50"
+                          className="flex w-full items-center justify-center gap-2 rounded-none comic-border bg-white py-2.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50"
                         >
                           <Mic className="h-5 w-5 shrink-0 stroke-[2.5]" aria-hidden />
                           Tap to record
@@ -631,14 +631,14 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                         <button
                           type="button"
                           onClick={stopRecording}
-                          className="flex w-full items-center justify-center gap-2 rounded-none border-2 border-black bg-red-500 py-2.5 text-sm font-bold text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                          className="flex w-full items-center justify-center gap-2 rounded-none comic-border bg-red-500 py-2.5 text-sm font-bold text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
                         >
                           <Mic className="h-5 w-5 shrink-0 stroke-[2.5]" aria-hidden />
                           Recording… tap to stop
                         </button>
                       )}
                       {practiceStatus === "processing" && (
-                        <div className="flex min-h-[42px] w-full items-center justify-center rounded-none border-2 border-black bg-white px-2 py-2 text-center text-sm font-bold text-black">
+                        <div className="flex min-h-[42px] w-full items-center justify-center rounded-none comic-border bg-white px-2 py-2 text-center text-sm font-bold text-brand-navy">
                           Checking pronunciation…
                         </div>
                       )}
@@ -647,7 +647,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                           type="button"
                           onClick={() => void startRecording()}
                           disabled={!canRecord}
-                          className="flex w-full items-center justify-center gap-2 rounded-none border-2 border-black bg-white py-2.5 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50"
+                          className="flex w-full items-center justify-center gap-2 rounded-none comic-border bg-white py-2.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50"
                         >
                           <Mic className="h-5 w-5 shrink-0 stroke-[2.5]" aria-hidden />
                           Tap to record again
@@ -658,11 +658,11 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                 </div>
               </div>
               {showPracticeThai && (
-                <div className="rounded-none border-2 border-black bg-white px-3 py-2">
+                <div className="rounded-none comic-border bg-white px-3 py-2">
                   {practiceThaiLoading ? (
-                    <p className="text-sm font-medium text-black">Translating…</p>
+                    <p className="text-sm font-medium text-brand-navy">Translating…</p>
                   ) : practiceThai ? (
-                    <p className="text-sm font-medium text-black">{practiceThai}</p>
+                    <p className="text-sm font-medium text-brand-navy">{practiceThai}</p>
                   ) : (
                     <p className="text-sm font-medium text-zinc-500">
                       Translation unavailable.
@@ -677,29 +677,29 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
               )}
               {spellingFail && hasCoherentInput && (
                 <div className="rounded-none border-2 border-amber-600 bg-amber-50 px-3 py-2 text-sm">
-                  <p className="font-bold text-black">Spelling check</p>
+                  <p className="font-bold text-brand-navy">Spelling check</p>
                   {spellingFail.issues.length > 0 && (
-                    <ul className="mt-1 list-inside list-disc font-medium text-black">
+                    <ul className="mt-1 list-inside list-disc font-medium text-brand-navy">
                       {spellingFail.issues.map((issue, i) => (
                         <li key={`${i}-${issue}`}>{issue}</li>
                       ))}
                     </ul>
                   )}
-                  <p className="mt-1 font-medium text-black">
+                  <p className="mt-1 font-medium text-brand-navy">
                     Suggested:{" "}
                     <span className="font-semibold">{spellingFail.corrected}</span>
                   </p>
                   <button
                     type="button"
                     onClick={() => setInput(spellingFail.corrected)}
-                    className="mt-2 w-full rounded-none border-2 border-black bg-white py-2 text-sm font-bold text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                    className="mt-2 w-full rounded-none comic-border bg-white py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                   >
                     Use correction
                   </button>
                 </div>
               )}
               {practiceStatus === "result" && (
-                <p className="text-sm font-bold text-black">
+                <p className="text-sm font-bold text-brand-navy">
                   Score: {practiceScore ?? 0}/100
                   {practiceTranscript ? ` - Heard: ${practiceTranscript}` : ""}
                 </p>
@@ -729,7 +729,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
                   spellingChecking ||
                   !spellingPass
                 }
-                className="w-full border-2 border-black bg-black px-3 py-2 text-base font-bold text-white disabled:opacity-50"
+                className="w-full comic-border bg-black px-3 py-2 text-base font-bold text-white disabled:opacity-50"
               >
                 {sending ? "…" : "Send"}
               </button>

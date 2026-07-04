@@ -116,25 +116,25 @@ export default function ReviewPage() {
 
   if (items.length === 0) {
     return (
-      <div className="flex min-h-screen flex-col overflow-y-auto bg-white text-black">
-        <header className="sticky top-0 z-10 border-b-2 border-black bg-white px-4 py-3">
+      <div className="flex min-h-[var(--feed-viewport-height)] flex-col overflow-y-auto text-brand-navy">
+        <header className="sticky top-0 z-10 comic-border-b-4 comic-bg-header-stripes px-4 py-3">
           <div className="mx-auto flex max-w-lg items-center justify-between">
             <Link
               href="/profile"
-              className="text-sm font-bold text-black underline"
+              className="text-sm font-bold text-brand-navy underline"
               aria-label="Back to profile"
             >
               ← Back
             </Link>
-            <h1 className="text-lg font-bold text-black">Vocabulary Review</h1>
+            <h1 className="text-lg font-bold text-brand-navy">Vocabulary Review</h1>
             <span className="w-12" aria-hidden />
           </div>
         </header>
         <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-          <p className="text-base font-bold text-black">
+          <p className="text-base font-bold text-brand-navy">
             You don&apos;t have any saved words yet.
           </p>
-          <p className="mt-2 text-sm font-bold text-black text-center">
+          <p className="mt-2 text-sm font-bold text-brand-navy text-center">
             Save words from subtitles to start reviewing.
           </p>
         </main>
@@ -146,18 +146,18 @@ export default function ReviewPage() {
   const thai = cacheKey ? thaiCache[cacheKey] : null;
 
   return (
-    <div className="flex min-h-screen flex-col overflow-y-auto bg-white text-black">
-      <header className="sticky top-0 z-10 border-b-2 border-black bg-white px-4 py-3">
+    <div className="flex min-h-[var(--feed-viewport-height)] flex-col overflow-y-auto text-brand-navy">
+      <header className="sticky top-0 z-10 comic-border-b-4 comic-bg-header-stripes px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center justify-between">
           <Link
             href="/profile"
-            className="text-sm font-bold text-black underline"
+            className="text-sm font-bold text-brand-navy underline"
             aria-label="Back to profile"
           >
             ← Back
           </Link>
-          <h1 className="text-lg font-bold text-black">Vocabulary Review</h1>
-          <span className="w-12 text-right text-sm font-bold text-black/70">
+          <h1 className="text-lg font-bold text-brand-navy">Vocabulary Review</h1>
+          <span className="w-12 text-right text-sm font-bold text-brand-navy/70">
             {index + 1} / {items.length}
           </span>
         </div>
@@ -167,13 +167,13 @@ export default function ReviewPage() {
         <div className="w-full max-w-lg flex flex-col items-center">
           {!revealed ? (
             <>
-              <p className="text-2xl sm:text-3xl font-bold capitalize text-black text-center">
+              <p className="text-2xl sm:text-3xl font-bold capitalize text-brand-navy text-center">
                 {current.word}
               </p>
               <button
                 type="button"
                 onClick={handleReveal}
-                className="mt-8 w-full max-w-xs min-h-[48px] rounded-none border-2 border-black bg-white px-6 py-3 text-base font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                className="mt-8 w-full max-w-xs min-h-[48px] rounded-none comic-border bg-white px-6 py-3 text-base font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               >
                 Reveal Meaning
               </button>
@@ -181,13 +181,13 @@ export default function ReviewPage() {
           ) : (
             <div className="mt-0 w-full max-w-lg space-y-6 text-center sm:text-left">
               <div className="flex items-center justify-center gap-2 flex-wrap">
-                <p className="text-2xl sm:text-3xl font-bold capitalize text-black">
+                <p className="text-2xl sm:text-3xl font-bold capitalize text-brand-navy">
                   {current.word}
                 </p>
                 <button
                   type="button"
                   onClick={() => speakWord(current.word)}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
                   aria-label="Pronounce word"
                 >
                   <Volume2 className="h-5 w-5 stroke-[2.5]" aria-hidden />
@@ -196,7 +196,7 @@ export default function ReviewPage() {
                   type="button"
                   onClick={() => startListening(current.word)}
                   disabled={isListening}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Repeat word for pronunciation check"
                 >
                   <Mic className="h-5 w-5 stroke-[2.5]" aria-hidden />
@@ -228,10 +228,10 @@ export default function ReviewPage() {
                 </p>
               )}
               <section>
-                <p className="text-xs font-bold uppercase tracking-wide text-black mb-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-brand-navy mb-1">
                   Definition
                 </p>
-                <p className="text-lg font-bold text-black">{current.meaning}</p>
+                <p className="text-lg font-bold text-brand-navy">{current.meaning}</p>
                 {thaiLoading && !thai ? (
                   <p className="mt-1 text-xs text-zinc-500">Translating…</p>
                 ) : thai?.definitionThai ? (
@@ -242,10 +242,10 @@ export default function ReviewPage() {
               </section>
               {current.example ? (
                 <section>
-                  <p className="text-xs font-bold uppercase tracking-wide text-black mb-1">
+                  <p className="text-xs font-bold uppercase tracking-wide text-brand-navy mb-1">
                     Example
                   </p>
-                  <p className="text-base font-bold text-black">{current.example}</p>
+                  <p className="text-base font-bold text-brand-navy">{current.example}</p>
                   {thaiLoading && !thai ? null : thai?.exampleThai ? (
                     <p className="mt-1 text-xs text-zinc-500">
                       {thai.exampleThai}
@@ -257,14 +257,14 @@ export default function ReviewPage() {
                 <button
                   type="button"
                   onClick={handleKnown}
-                  className="min-h-[48px] flex-1 rounded-none border-2 border-black bg-emerald-200 px-6 py-3 text-base font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                  className="min-h-[48px] flex-1 rounded-none comic-border bg-emerald-200 px-6 py-3 text-base font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
                 >
                   ✓ I knew it
                 </button>
                 <button
                   type="button"
                   onClick={handleUnknown}
-                  className="min-h-[48px] flex-1 rounded-none border-2 border-black bg-amber-200 px-6 py-3 text-base font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+                  className="min-h-[48px] flex-1 rounded-none comic-border bg-amber-200 px-6 py-3 text-base font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
                 >
                   ✗ I didn&apos;t know it
                 </button>

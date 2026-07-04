@@ -28,7 +28,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 rounded-none border-2 border-black bg-black text-white shadow-[3px_3px_0px_black] pb-[env(safe-area-inset-bottom)] subpixel-antialiased"
+      className="fixed bottom-0 left-0 right-0 z-50 rounded-none comic-border bg-black text-white comic-shadow-sm pb-[env(safe-area-inset-bottom)] subpixel-antialiased"
       style={{ height: "calc(4rem + env(safe-area-inset-bottom, 0px))" }}
       aria-label="Main navigation"
       suppressHydrationWarning
@@ -41,7 +41,7 @@ export function BottomNav() {
             return (
               <span
                 key={item.label}
-                className="flex min-w-[56px] flex-col items-center gap-0.5 rounded-none border-2 border-black bg-black px-2 py-1.5 text-white shadow-[3px_3px_0px_black] cursor-not-allowed opacity-70"
+                className="flex min-w-[56px] flex-col items-center gap-0.5 rounded-none comic-border bg-black px-2 py-1.5 text-white comic-shadow-sm cursor-not-allowed opacity-70"
                 aria-disabled="true"
                 title="Coming soon"
               >
@@ -58,7 +58,7 @@ export function BottomNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="flex min-w-[56px] flex-col items-center gap-0.5 rounded-none border-2 border-black bg-black px-2 py-1.5 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+              className="flex min-w-[56px] flex-col items-center gap-0.5 rounded-none comic-border bg-black px-2 py-1.5 text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
               aria-current={isActive ? "page" : undefined}
             >
               <span aria-hidden>

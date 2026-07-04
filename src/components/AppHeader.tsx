@@ -44,10 +44,10 @@ export function AppHeader() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex h-[var(--header-height)] items-center justify-between border-b border-zinc-200 bg-white px-3">
+    <header className="comic-bg-header-stripes comic-border-b-4 comic-shadow-xl fixed inset-x-0 top-0 z-50 flex h-[var(--header-height)] items-center justify-between px-3">
       <Link
         href="/profile"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-800 transition hover:bg-zinc-100"
+        className="comic-icon-btn h-10 w-10 rounded-full"
         aria-label="Profile"
       >
         <User className="h-5 w-5" strokeWidth={2.25} />
@@ -56,7 +56,7 @@ export function AppHeader() {
       <button
         type="button"
         onClick={handleHomeClick}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md p-1 transition hover:opacity-80"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg p-1 transition hover:opacity-80"
         aria-label="Home — back to start of feed"
       >
         <img
@@ -69,8 +69,8 @@ export function AppHeader() {
       <button
         type="button"
         onClick={handleFeedLevelClick}
-        className={`flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-zinc-100 ${
-          pickerOpen ? "bg-zinc-100 text-black" : "text-zinc-800"
+        className={`comic-icon-btn h-10 w-10 rounded-full ${
+          pickerOpen ? "comic-bg-primary text-white" : ""
         }`}
         aria-label="Feed level"
         aria-expanded={pickerOpen}

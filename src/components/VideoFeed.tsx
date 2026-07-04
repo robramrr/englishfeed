@@ -239,9 +239,9 @@ export function VideoFeed({
     );
   }
 
-  /** Must match the feed viewport (ClientOnlyFeed main). `h-screen` / 100vh ≠ that area on mobile, so snaps desync: two slides partly visible and the prior slide’s absolute Info/meta can sit over the next video. */
+  /** Must match the feed shell height — use 100% of the scroll container, not a second viewport calc. */
   const slideFrameClass =
-    "h-[calc(100dvh-var(--header-height))] min-h-[calc(100dvh-var(--header-height))] w-full min-w-0 shrink-0 snap-start snap-always overflow-hidden";
+    "h-full min-h-0 w-full min-w-0 shrink-0 snap-start snap-always overflow-hidden";
 
   return (
     <div
@@ -250,8 +250,8 @@ export function VideoFeed({
       onScroll={handleScroll}
       suppressHydrationWarning
     >
-      <div className="flex flex-col" suppressHydrationWarning>
-        {lessons.map((lesson) => (
+      <div className="flex h-full min-h-0 flex-col" suppressHydrationWarning>
+        {lessons.map((lesson, index) => (
           <div key={lesson.id} className={slideFrameClass} suppressHydrationWarning>
             <VideoSlide
               lesson={lesson}
@@ -261,6 +261,7 @@ export function VideoFeed({
                 lesson.id === initialVideoId ? initialSeekTime : undefined
               }
               userId={userId}
+              isActive={index === currentIndex}
             />
           </div>
         ))}

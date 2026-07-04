@@ -57,10 +57,10 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="flex max-h-[min(92dvh,calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-1rem))] w-full max-w-lg flex-col overflow-hidden rounded-none border-t-2 border-black bg-white text-black shadow-[0_-4px_0_0_black] sm:max-h-[min(88dvh,720px)] sm:rounded-none sm:border-2 sm:shadow-[3px_3px_0px_black]"
+        className="flex max-h-[min(92dvh,calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-1rem))] w-full max-w-lg flex-col overflow-hidden rounded-lg comic-border bg-white text-brand-navy comic-shadow-md sm:max-h-[min(88dvh,720px)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b-2 border-black p-3">
+        <div className="comic-border-b-4 flex shrink-0 items-center justify-between gap-2 p-3">
           <div className="flex min-w-0 items-center gap-2">
             <Camera className="h-5 w-5 shrink-0" aria-hidden />
             <div className="min-w-0">
@@ -75,7 +75,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-none border-2 border-black bg-white px-2 py-1 text-sm font-bold shadow-[2px_2px_0px_black]"
+            className="shrink-0 rounded-none comic-border bg-white px-2 py-1 text-sm font-bold comic-shadow-sm"
             aria-label="Close"
           >
             <X className="h-4 w-4" aria-hidden />
@@ -95,7 +95,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold"
+                  className="rounded-none comic-border bg-white px-4 py-2 text-sm font-bold"
                 >
                   Close
                 </button>
@@ -116,7 +116,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
                             ? "text-zinc-500"
                             : secondsLeft <= 10
                               ? "text-red-600"
-                              : "text-black"
+                              : "text-brand-navy"
                         }`}
                         title={
                           waitingForRoundImage
@@ -171,7 +171,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
                           type="button"
                           disabled={feedback !== null || waitingForRoundImage}
                           onClick={() => onPickChoice(idx)}
-                          className="rounded-none border-2 border-black bg-white py-3 text-sm font-bold shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50"
+                          className="rounded-none comic-border bg-white py-3 text-sm font-bold comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50"
                         >
                           {label}
                         </button>
@@ -197,7 +197,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
                     <button
                       type="button"
                       onClick={onClose}
-                      className="w-full rounded-none border-2 border-black bg-white py-3 text-sm font-bold shadow-[3px_3px_0px_black]"
+                      className="w-full rounded-none comic-border bg-white py-3 text-sm font-bold comic-shadow-sm"
                     >
                       Done
                     </button>
@@ -208,7 +208,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
           </div>
 
           {showMicFooter && (
-            <div className="shrink-0 space-y-2 border-t-2 border-black bg-white p-3">
+            <div className="shrink-0 space-y-2 comic-border-t-4 bg-white p-3">
               <button
                 type="button"
                 onClick={startSpeechAnswer}
@@ -217,7 +217,7 @@ export function CameraVocabQuizModal({ api, onClose }: Props) {
                   waitingForRoundImage ||
                   (feedback !== null && !awaitingSpeechAfterCorrectChoice)
                 }
-                className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-none border-2 border-black bg-black py-3 text-sm font-bold text-white disabled:opacity-50"
+                className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-none comic-border bg-black py-3 text-sm font-bold text-white disabled:opacity-50"
               >
                 <Mic className="h-5 w-5 shrink-0 stroke-[2.5]" aria-hidden />
                 {listening ? "Listening…" : "Say the word"}

@@ -131,15 +131,15 @@ export function PracticeQuiz({
         suppressHydrationWarning
       >
         <div
-          className="w-full max-w-md rounded-none border-2 border-black bg-white p-6 text-center text-black shadow-[3px_3px_0px_black]"
+          className="w-full max-w-md rounded-none comic-border bg-white p-6 text-center text-brand-navy comic-shadow-sm"
           onClick={(e) => e.stopPropagation()}
           suppressHydrationWarning
         >
-          <div className="text-black font-bold">Loading practice questions…</div>
+          <div className="text-brand-navy font-bold">Loading practice questions…</div>
           <button
             type="button"
             onClick={onClose}
-            className="mt-4 rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+            className="mt-4 rounded-none comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
           >
             Cancel
           </button>
@@ -159,7 +159,7 @@ export function PracticeQuiz({
         suppressHydrationWarning
       >
         <div
-          className="w-full max-w-md rounded-none border-2 border-black bg-white p-6 text-center text-black shadow-[3px_3px_0px_black]"
+          className="w-full max-w-md rounded-none comic-border bg-white p-6 text-center text-brand-navy comic-shadow-sm"
           onClick={(e) => e.stopPropagation()}
           suppressHydrationWarning
         >
@@ -167,7 +167,7 @@ export function PracticeQuiz({
           <button
             type="button"
             onClick={onClose}
-            className="mt-4 rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+            className="mt-4 rounded-none comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
           >
             Close
           </button>
@@ -188,21 +188,21 @@ export function PracticeQuiz({
       suppressHydrationWarning
     >
         <div
-          className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black]"
+          className="flex max-h-[min(88dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-none comic-border bg-white text-brand-navy comic-shadow-sm"
           onClick={(e) => e.stopPropagation()}
           suppressHydrationWarning
         >
-          <div className="flex shrink-0 items-start justify-between gap-3 border-b-2 border-black p-3 sm:p-4">
+          <div className="flex shrink-0 items-start justify-between gap-3 comic-border-b-4 p-3 sm:p-4">
           <div className="min-w-0">
             <div className="text-sm font-bold">{progressLabel}</div>
-            <div className="truncate text-base font-bold text-black">
+            <div className="truncate text-base font-bold text-brand-navy">
               {title ?? "Practice"}
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-none border-2 border-black bg-white px-2 py-1 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+            className="rounded-none comic-border bg-white px-2 py-1 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
             aria-label="Close practice"
           >
             ✕
@@ -213,14 +213,14 @@ export function PracticeQuiz({
           {!completed ? (
             <>
               <div className="flex items-start gap-2">
-                <p className="min-w-0 flex-1 text-lg font-bold leading-snug text-black">
+                <p className="min-w-0 flex-1 text-lg font-bold leading-snug text-brand-navy">
                   {current.question}
                 </p>
                 <div className="flex shrink-0 items-center gap-1">
                   <button
                     type="button"
                     onClick={() => speakWord(current.question)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                     aria-label="Play question audio"
                   >
                     <SpeakerIcon className="h-5 w-5" />
@@ -228,7 +228,7 @@ export function PracticeQuiz({
                   <button
                     type="button"
                     onClick={handleThaiToggle}
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-base text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-base text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
                       showThaiTranslation ? "opacity-100" : "opacity-70"
                     }`}
                     aria-label={
@@ -242,11 +242,11 @@ export function PracticeQuiz({
                 </div>
               </div>
               {showThaiTranslation && (
-                <div className="rounded-none border-2 border-black bg-zinc-50 px-3 py-2 shadow-[2px_2px_0px_black]">
+                <div className="rounded-none comic-border bg-zinc-50 px-3 py-2 comic-shadow-sm">
                   {thaiLoading ? (
-                    <p className="text-sm font-medium text-black">Translating…</p>
+                    <p className="text-sm font-medium text-brand-navy">Translating…</p>
                   ) : thaiSentence ? (
-                    <p className="text-sm font-medium text-black">{thaiSentence}</p>
+                    <p className="text-sm font-medium text-brand-navy">{thaiSentence}</p>
                   ) : (
                     <p className="text-sm font-medium text-zinc-500">
                       Translation unavailable.
@@ -263,13 +263,13 @@ export function PracticeQuiz({
                   const showWrong = isAnswered && chosen && !correct;
 
                   const base =
-                    "w-full rounded-none border-2 border-black bg-white px-3 py-2.5 text-left font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:cursor-not-allowed";
+                    "w-full rounded-none comic-border bg-white px-3 py-2.5 text-left font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:cursor-not-allowed";
                   const stateClass = showCorrect
-                    ? "bg-emerald-400 text-black hover:bg-emerald-400"
+                    ? "bg-emerald-400 text-brand-navy hover:bg-emerald-400"
                     : showWrong
-                      ? "bg-red-400 text-black hover:bg-red-400"
+                      ? "bg-red-400 text-brand-navy hover:bg-red-400"
                       : chosen
-                        ? "bg-zinc-100 text-black"
+                        ? "bg-zinc-100 text-brand-navy"
                         : "hover:bg-zinc-50";
 
                   return (
@@ -289,13 +289,13 @@ export function PracticeQuiz({
 
               {isAnswered && (
                 <div
-                  className={`rounded-none border-2 border-black p-3 shadow-[3px_3px_0px_black] ${
+                  className={`rounded-none comic-border p-3 comic-shadow-sm ${
                     isCorrect ? "bg-emerald-400" : "bg-white"
                   }`}
                 >
                   <div
                     className={`text-sm font-semibold ${
-                      isCorrect ? "text-black" : "text-red-800"
+                      isCorrect ? "text-brand-navy" : "text-red-800"
                     }`}
                   >
                     {isCorrect ? "Correct!" : "Incorrect"}
@@ -324,11 +324,11 @@ export function PracticeQuiz({
           )}
         </div>
 
-          <div className="flex shrink-0 items-center justify-end gap-2 border-t-2 border-black p-3 sm:p-4">
+          <div className="flex shrink-0 items-center justify-end gap-2 comic-border-t-4 p-3 sm:p-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
+            className="rounded-none comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none"
           >
             {completed ? "Close" : "Cancel"}
           </button>
@@ -336,7 +336,7 @@ export function PracticeQuiz({
             type="button"
             onClick={handleNext}
             disabled={!canContinue}
-            className="rounded-none border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-none comic-border bg-white px-4 py-2 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {completed ? "Done" : index + 1 >= total ? "Finish" : "Next"}
           </button>

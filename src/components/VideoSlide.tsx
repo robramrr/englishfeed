@@ -43,6 +43,7 @@ import {
   Info,
   MessageCircle,
   Mic,
+  X,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -99,6 +100,8 @@ interface VideoSlideProps {
   initialSeekTime?: number;
   /** Authenticated Supabase user id, used for analytics. */
   userId?: string | null;
+  /** Scroll-index active slide — reliable UI visibility when IntersectionObserver lags. */
+  isActive?: boolean;
 }
 
 import { speakWord, usePronunciationCheck } from "@/lib/pronunciation";
@@ -293,6 +296,7 @@ export function VideoSlide({
   scrollContainerReady = false,
   initialSeekTime,
   userId,
+  isActive = false,
 }: VideoSlideProps) {
   const [videoError, setVideoError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -362,6 +366,8 @@ export function VideoSlide({
   const slideRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
+  const showChrome = isActive || isVisible;
+
   const cameraVocab = useCameraVocabExercise({
     lessonId: lesson.id,
     userId,
@@ -391,6 +397,17 @@ export function VideoSlide({
     progressCurrent,
     rawSubtitleSegments,
   ]);
+
+  const closeSubtitleWordPopup = useCallback(() => {
+    videoRef.current?.play();
+    setShowThaiTranslation(false);
+    setSelectedSubtitleWord(null);
+    setJustSavedWord(null);
+    setSelectedSubtitleSentence(null);
+    setThaiResult(null);
+    setThaiLoading(false);
+    resetPronunciation();
+  }, [resetPronunciation]);
 
   // Fetch per-lesson subtitles; clear immediately when lesson changes so previous subtitles never persist
   useEffect(() => {
@@ -534,6 +551,23 @@ export function VideoSlide({
     observer.observe(slide);
     return () => observer.disconnect();
   }, [lesson.id, videoError, scrollContainerRef, scrollContainerReady]);
+
+  // Scroll-index fallback: play/pause when IntersectionObserver is slow or unavailable.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || videoError) return;
+    if (isActive) {
+      setIsVisible(true);
+      video.play().catch(() => {});
+      return;
+    }
+    if (!isVisible) return;
+    const watchTime = video.currentTime;
+    trackEvent("video_view_end", lesson.id, { watchTime }, userId ?? null);
+    video.pause();
+    video.currentTime = 0;
+    setIsVisible(false);
+  }, [isActive, isVisible, lesson.id, userId, videoError]);
 
   // Sync like state from localStorage (client-only)
   useEffect(() => {
@@ -998,7 +1032,7 @@ export function VideoSlide({
       )}
 
       {/* Bottom dock: info + play/timeline */}
-      {isVisible && !videoError && (
+      {showChrome && !videoError && (
         <div
           className="pointer-events-auto absolute inset-x-0 bottom-0 z-40 flex flex-col"
           style={{ paddingBottom: "var(--video-dock-bottom)" }}
@@ -1007,15 +1041,15 @@ export function VideoSlide({
         >
           {currentWords.length > 0 && (
             <div className="pointer-events-none flex justify-center px-3 pb-1 md:px-4">
-              <div className="pointer-events-auto flex h-8 w-full max-w-[min(100%,24rem)] items-center justify-center rounded-none border-2 border-black bg-white px-2 shadow-[3px_3px_0px_black] md:h-[2.85rem] md:px-3">
-                <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 text-black md:text-base md:leading-[1.35rem] lg:text-lg">
+              <div className="pointer-events-auto flex h-8 w-full max-w-[min(100%,24rem)] items-center justify-center rounded-none comic-border bg-white px-2 comic-shadow-sm md:h-[2.85rem] md:px-3">
+                <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 text-brand-navy md:text-base md:leading-[1.35rem] lg:text-lg">
                   {currentWords.map((w, i) => (
                     <span
                       key={`${i}-${w.start}`}
                       role="button"
                       tabIndex={0}
                       className={`cursor-pointer rounded-sm px-0.5 transition-colors duration-75 hover:underline ${
-                        i === activeWordIndex ? "text-blue-600" : "text-black"
+                        i === activeWordIndex ? "text-brand-red" : "text-brand-navy"
                       }`}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1044,7 +1078,7 @@ export function VideoSlide({
                 className="pointer-events-auto absolute bottom-full left-2 z-10 mb-1 flex flex-col"
                 suppressHydrationWarning
               >
-                <div className="w-[280px] max-w-[280px] rounded-md border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 p-3 shadow-[3px_3px_0px_black]">
+                <div className="w-[280px] max-w-[280px] rounded-md comic-border comic-bg-primary text-white p-3 comic-shadow-sm">
                   <h2 className="text-lg font-bold text-white">
                     <span className="block">{String(lesson.title ?? "")}</span>
                   </h2>
@@ -1058,7 +1092,7 @@ export function VideoSlide({
                       <Link
                         key={tag}
                         href={`/tag/${encodeURIComponent(tag)}`}
-                        className="inline-flex items-center rounded-md border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] transition-colors hover:bg-gray-100"
+                        className="inline-flex items-center rounded-md comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm transition-colors hover:bg-gray-100"
                         onClick={(e) => e.stopPropagation()}
                       >
                         #{tag}
@@ -1071,7 +1105,7 @@ export function VideoSlide({
             <button
               type="button"
               onClick={() => setMetaPanelOpen((open) => !open)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
               aria-label={metaPanelOpen ? "Hide lesson info" : "Show lesson info"}
               aria-expanded={metaPanelOpen}
             >
@@ -1080,7 +1114,7 @@ export function VideoSlide({
           <button
             type="button"
             onClick={handlePlayPause}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-blue-600 shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-red comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
@@ -1118,9 +1152,9 @@ export function VideoSlide({
               else video.currentTime = Math.max(0, progressCurrent - step);
             }}
           >
-            <div className="relative h-4 w-full border-2 border-black bg-white shadow-[2px_2px_0px_black]">
+            <div className="relative h-4 w-full comic-border bg-white comic-shadow-sm">
               <div
-                className="absolute inset-y-0 left-0 max-w-full border-r-2 border-black bg-blue-500 transition-[width] duration-100"
+                className="absolute inset-y-0 left-0 max-w-full border-r-4 border-brand-navy bg-brand-red transition-[width] duration-100"
                 style={{
                   width: progressDuration > 0 ? `${(100 * progressCurrent) / progressDuration}%` : "0%",
                 }}
@@ -1130,7 +1164,7 @@ export function VideoSlide({
           <button
             type="button"
             onClick={handleSoundClick}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
@@ -1148,41 +1182,23 @@ export function VideoSlide({
       {selectedSubtitleWord && (
         <div
           className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => {
-            videoRef.current?.play();
-            setShowThaiTranslation(false);
-            setSelectedSubtitleWord(null);
-            setJustSavedWord(null);
-            setSelectedSubtitleSentence(null);
-            setThaiResult(null);
-            setThaiLoading(false);
-            resetPronunciation();
-          }}
+          onClick={closeSubtitleWordPopup}
           role="button"
           tabIndex={0}
           aria-label="Close word popup"
           onKeyDown={(e) => {
-            if (e.key === "Escape") {
-              videoRef.current?.play();
-              setShowThaiTranslation(false);
-              setSelectedSubtitleWord(null);
-              setJustSavedWord(null);
-              setSelectedSubtitleSentence(null);
-              setThaiResult(null);
-              setThaiLoading(false);
-              resetPronunciation();
-            }
+            if (e.key === "Escape") closeSubtitleWordPopup();
           }}
           suppressHydrationWarning
         >
           <div
-            className="max-h-[min(70dvh,420px)] w-full max-w-sm overflow-y-auto rounded-none border-2 border-black bg-white px-3 py-3 shadow-[3px_3px_0px_black] sm:px-4"
+            className="max-h-[min(70dvh,420px)] w-full max-w-sm overflow-y-auto rounded-none comic-border bg-white px-3 py-3 comic-shadow-sm sm:px-4"
             onClick={(e) => e.stopPropagation()}
             suppressHydrationWarning
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-1 items-center gap-2">
-                <p className="min-w-0 truncate text-lg font-bold capitalize text-black">
+                <p className="min-w-0 truncate text-lg font-bold capitalize text-brand-navy">
                   {selectedSubtitleWord}
                 </p>
                 <button
@@ -1191,7 +1207,7 @@ export function VideoSlide({
                     e.stopPropagation();
                     speakWord(selectedSubtitleWord ?? "");
                   }}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                   aria-label="Pronounce word"
                 >
                 <svg
@@ -1211,7 +1227,7 @@ export function VideoSlide({
                   startListening(selectedSubtitleWord ?? "");
                 }}
                 disabled={isListening}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50"
                 aria-label="Repeat word for pronunciation check"
               >
                 <svg
@@ -1231,7 +1247,7 @@ export function VideoSlide({
                   e.stopPropagation();
                   setShowThaiTranslation((prev) => !prev);
                 }}
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-base text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-base text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
                   showThaiTranslation ? "opacity-100" : "opacity-70"
                 }`}
                 aria-label={showThaiTranslation ? "Hide Thai translation" : "Show Thai translation"}
@@ -1242,7 +1258,7 @@ export function VideoSlide({
               <div className="flex shrink-0 items-center gap-1">
                 <Link
                   href="/profile/vocabulary"
-                  className="flex h-8 w-8 items-center justify-center rounded-none border-2 border-black bg-white text-sm font-bold shadow-[2px_2px_0px_black]"
+                  className="flex h-8 w-8 items-center justify-center rounded-none comic-border bg-white text-sm font-bold comic-shadow-sm"
                   onClick={(e) => e.stopPropagation()}
                   aria-label="My vocabulary"
                   title="My vocabulary"
@@ -1251,19 +1267,30 @@ export function VideoSlide({
                 </Link>
                 <Link
                   href="/profile/clips"
-                  className="flex h-8 w-8 items-center justify-center rounded-none border-2 border-black bg-white text-sm font-bold shadow-[2px_2px_0px_black]"
+                  className="flex h-8 w-8 items-center justify-center rounded-none comic-border bg-white text-sm font-bold comic-shadow-sm"
                   onClick={(e) => e.stopPropagation()}
                   aria-label="My clips"
                   title="My clips"
                 >
                   ✂
                 </Link>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    closeSubtitleWordPopup();
+                  }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" strokeWidth={2.5} aria-hidden />
+                </button>
               </div>
             </div>
             {(recognizedText || pronunciationFeedback) && (
               <div className="mt-1.5 space-y-0.5">
                 {recognizedText && (
-                  <p className="text-xs font-medium text-black">
+                  <p className="text-xs font-medium text-brand-navy">
                     Heard: &quot;{recognizedText}&quot;
                   </p>
                 )}
@@ -1281,37 +1308,37 @@ export function VideoSlide({
               </div>
             )}
             {isListening && selectedSubtitleWord && (
-              <p className="mt-1 text-xs font-medium text-black">
+              <p className="mt-1 text-xs font-medium text-brand-navy">
                 🎤 Say the word: &quot;{selectedSubtitleWord}&quot;
               </p>
             )}
             {showThaiTranslation && (
               thaiResult?.wordThai ? (
-                <p className="mt-0.5 text-xs font-medium text-black">
+                <p className="mt-0.5 text-xs font-medium text-brand-navy">
                   {thaiResult.wordThai}
                 </p>
               ) : thaiLoading ? (
-                <p className="mt-0.5 text-xs font-medium text-black">Translating…</p>
+                <p className="mt-0.5 text-xs font-medium text-brand-navy">Translating…</p>
               ) : null
             )}
             {isLoadingDefinition ? (
-              <p className="mt-2 text-sm font-bold text-black">Loading...</p>
+              <p className="mt-2 text-sm font-bold text-brand-navy">Loading...</p>
             ) : contextResult ? (
               <div className="mt-2 space-y-3">
                 <section>
-                  <p className="text-xs font-bold uppercase tracking-wide text-black">
+                  <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                     Definition
                   </p>
-                  <p className="mt-0.5 text-sm font-medium text-black">
+                  <p className="mt-0.5 text-sm font-medium text-brand-navy">
                     {contextResult.contextDefinition}
                   </p>
                   {showThaiTranslation && (
                     thaiResult?.definitionThai ? (
-                      <p className="mt-0.5 text-xs font-medium text-black">
+                      <p className="mt-0.5 text-xs font-medium text-brand-navy">
                         {thaiResult.definitionThai}
                       </p>
                     ) : thaiLoading ? (
-                      <p className="mt-0.5 text-xs font-medium text-black">
+                      <p className="mt-0.5 text-xs font-medium text-brand-navy">
                         Translating…
                       </p>
                     ) : null
@@ -1319,19 +1346,19 @@ export function VideoSlide({
                 </section>
                 {contextResult.synonyms.length > 0 && (
                   <section>
-                    <p className="text-xs font-bold uppercase tracking-wide text-black">
+                    <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                       Synonyms
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-black">
+                    <p className="mt-0.5 text-sm font-medium text-brand-navy">
                       {contextResult.synonyms.join(", ")}
                     </p>
                     {showThaiTranslation && (
                       thaiResult?.synonymsThai ? (
-                        <p className="mt-0.5 text-xs font-medium text-black">
+                        <p className="mt-0.5 text-xs font-medium text-brand-navy">
                           {thaiResult.synonymsThai}
                         </p>
                       ) : thaiLoading ? (
-                        <p className="mt-0.5 text-xs font-medium text-black">
+                        <p className="mt-0.5 text-xs font-medium text-brand-navy">
                           Translating…
                         </p>
                       ) : null
@@ -1340,19 +1367,19 @@ export function VideoSlide({
                 )}
                 {contextResult.examples.length > 0 && (
                   <section>
-                    <p className="text-xs font-bold uppercase tracking-wide text-black">
+                    <p className="text-xs font-bold uppercase tracking-wide text-brand-navy">
                       Example
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-black">
+                    <p className="mt-0.5 text-sm font-medium text-brand-navy">
                       {contextResult.examples[0]}
                     </p>
                     {showThaiTranslation && (
                       thaiResult?.exampleThai ? (
-                        <p className="mt-0.5 text-xs font-medium text-black">
+                        <p className="mt-0.5 text-xs font-medium text-brand-navy">
                           {thaiResult.exampleThai}
                         </p>
                       ) : thaiLoading ? (
-                        <p className="mt-0.5 text-xs font-medium text-black">
+                        <p className="mt-0.5 text-xs font-medium text-brand-navy">
                           Translating…
                         </p>
                       ) : null
@@ -1382,7 +1409,7 @@ export function VideoSlide({
                           });
                           if (added) setJustSavedWord(selectedSubtitleWord);
                         }}
-                        className="rounded-none border-2 border-black bg-white px-3 py-1.5 text-sm font-bold text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-60"
+                        className="rounded-none comic-border bg-white px-3 py-1.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-60"
                       >
                         {saved ? "Saved" : "Save Word"}
                       </button>
@@ -1399,7 +1426,7 @@ export function VideoSlide({
                               timestamp,
                             });
                           }}
-                          className="rounded-none border-2 border-black bg-white px-3 py-1.5 text-sm font-bold text-black shadow-[2px_2px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                          className="rounded-none comic-border bg-white px-3 py-1.5 text-sm font-bold text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                         >
                           Clip Sentence
                         </button>
@@ -1428,18 +1455,18 @@ export function VideoSlide({
         >
           <div
             ref={popupRef}
-            className="max-w-sm rounded-none border-2 border-black bg-white p-6 shadow-[3px_3px_0px_black]"
+            className="max-w-sm rounded-none comic-border bg-white p-6 comic-shadow-sm"
             onClick={(e) => e.stopPropagation()}
             suppressHydrationWarning
           >
-            <p className="text-xl font-bold text-black">
+            <p className="text-xl font-bold text-brand-navy">
               {selectedWord.word}
             </p>
-            <p className="mt-2 text-sm font-bold text-black">
+            <p className="mt-2 text-sm font-bold text-brand-navy">
               {selectedWord.meaning}
             </p>
             {selectedWord.example && (
-              <p className="mt-3 text-sm italic font-bold text-black">
+              <p className="mt-3 text-sm italic font-bold text-brand-navy">
                 &ldquo;{selectedWord.example}&rdquo;
               </p>
             )}
@@ -1456,13 +1483,13 @@ export function VideoSlide({
         <span className="sr-only">Video actions</span>
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                       Quiz
                     </span>
                     <button
                       type="button"
                       onClick={() => setPracticeOpen(true)}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                       aria-label="Quiz"
                     >
                       <ClipboardList className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
@@ -1471,7 +1498,7 @@ export function VideoSlide({
                 )}
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                       Speak
                     </span>
                     <button
@@ -1510,7 +1537,7 @@ export function VideoSlide({
                           setPronunciationOpen(true);
                         }
                       }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                       aria-label="Practice pronunciation"
                     >
                       <Mic className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
@@ -1519,7 +1546,7 @@ export function VideoSlide({
                 )}
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
-                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                       Vocabulary
                     </span>
                     <button
@@ -1555,7 +1582,7 @@ export function VideoSlide({
                             setVocabularyLoading(false);
                           });
                       }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                       aria-label="Vocabulary"
                     >
                       <BookOpen className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
@@ -1563,7 +1590,7 @@ export function VideoSlide({
                   </div>
                 )}
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                     Camera vocab
                   </span>
                   <button
@@ -1572,27 +1599,27 @@ export function VideoSlide({
                       videoRef.current?.pause();
                       setCameraExerciseOpen(true);
                     }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                     aria-label="Camera vocabulary exercise"
                   >
                     <Camera className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                     AI Tutor
                   </span>
                   <button
                     type="button"
                     onClick={openTutorModal}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                     aria-label="AI Tutor"
                   >
                     <Bot className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                     Like
                   </span>
                   <button
@@ -1630,7 +1657,7 @@ export function VideoSlide({
                         // ignore network errors; UI state already updated optimistically
                       }
                     }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-red-500 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                     aria-label={isLiked ? "Unlike" : "Like"}
                   >
                     <Heart
@@ -1640,12 +1667,12 @@ export function VideoSlide({
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
-                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
                     Comment
                   </span>
                   <Link
                     href="/inbox"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
                     aria-label="Comment"
                   >
                     <MessageCircle className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />

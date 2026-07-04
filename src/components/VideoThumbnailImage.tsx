@@ -97,7 +97,7 @@ export default function VideoThumbnailImage({
           >
             <span
               className={`text-lg ${
-                variant === "brutalist" ? "text-black/60" : "text-zinc-500"
+                variant === "brutalist" ? "text-brand-navy/60" : "text-zinc-500"
               }`}
               role="img"
             >
@@ -120,7 +120,7 @@ export default function VideoThumbnailImage({
     >
       <div className="absolute inset-0 flex items-center justify-center">
         <span
-          className={`text-lg ${variant === "brutalist" ? "text-black/60" : "text-zinc-500"}`}
+          className={`text-lg ${variant === "brutalist" ? "text-brand-navy/60" : "text-zinc-500"}`}
           role="img"
         >
           ▶
@@ -130,7 +130,7 @@ export default function VideoThumbnailImage({
         <p
           className={`relative z-10 line-clamp-2 w-full px-1 py-0.5 text-[10px] font-bold ${
             variant === "brutalist"
-              ? "rounded-none border-2 border-black bg-white text-black shadow-[2px_2px_0px_black]"
+              ? "rounded-none comic-border bg-white text-brand-navy comic-shadow-sm"
               : "rounded-sm bg-black/40 text-zinc-100"
           }`}
         >
