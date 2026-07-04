@@ -1459,7 +1459,7 @@ export function VideoSlide({
 
       {/* Floating vertical action rail */}
       <div
-        className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center justify-center gap-3"
+        className="absolute right-3 top-4 z-10 flex flex-col items-center gap-3 md:top-1/2 md:-translate-y-1/2 md:justify-center"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
