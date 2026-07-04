@@ -56,7 +56,7 @@ export default function AuthPage() {
     <main className="flex min-h-screen items-center justify-center bg-white text-black p-4">
       <div className="w-full max-w-sm">
         <img
-          src="https://res.cloudinary.com/dkbf7tvcx/image/upload/englishfully/logo/englishfeed.png"
+          src="https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783143201/englishfeed/logo/englishfeed-logo.png"
           alt="EnglishFeed"
           className="mx-auto mb-4 h-14 w-auto"
         />

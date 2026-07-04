@@ -3,50 +3,973 @@
     {
       "id": 0,
       "start": 0,
-      "end": 5.44,
-      "text": "Want to learn simple English confidently? Start with to be."
+      "end": 3.16,
+      "text": "Want to learn simple English confidently",
+      "words": [
+        {
+          "word": "Want",
+          "start": 0,
+          "end": 0.62
+        },
+        {
+          "word": "to",
+          "start": 0.62,
+          "end": 0.82
+        },
+        {
+          "word": "learn",
+          "start": 0.82,
+          "end": 1.18
+        },
+        {
+          "word": "simple",
+          "start": 1.18,
+          "end": 1.92
+        },
+        {
+          "word": "English",
+          "start": 1.92,
+          "end": 2.38
+        },
+        {
+          "word": "confidently",
+          "start": 2.38,
+          "end": 3.16
+        }
+      ]
     },
     {
       "id": 1,
-      "start": 5.44,
-      "end": 26.04,
-      "text": "The verb to be shows who or what someone is and the forms are I am, I am, you are, you are, and he is, he is, she is, she is."
+      "start": 4.28,
+      "end": 5.08,
+      "text": "Start with to be",
+      "words": [
+        {
+          "word": "Start",
+          "start": 4.28,
+          "end": 4.32
+        },
+        {
+          "word": "with",
+          "start": 4.32,
+          "end": 4.74
+        },
+        {
+          "word": "to",
+          "start": 4.74,
+          "end": 4.9
+        },
+        {
+          "word": "be",
+          "start": 4.9,
+          "end": 5.08
+        }
+      ]
     },
     {
       "id": 2,
-      "start": 26.04,
-      "end": 33.8,
-      "text": "Use them to say who someone is, how they feel, or their job."
+      "start": 6.36,
+      "end": 8.82,
+      "text": "The verb to be shows who",
+      "words": [
+        {
+          "word": "The",
+          "start": 6.36,
+          "end": 6.66
+        },
+        {
+          "word": "verb",
+          "start": 6.66,
+          "end": 6.78
+        },
+        {
+          "word": "to",
+          "start": 6.78,
+          "end": 7.02
+        },
+        {
+          "word": "be",
+          "start": 7.02,
+          "end": 7.34
+        },
+        {
+          "word": "shows",
+          "start": 7.34,
+          "end": 8.3
+        },
+        {
+          "word": "who",
+          "start": 8.3,
+          "end": 8.82
+        }
+      ]
     },
     {
       "id": 3,
-      "start": 33.8,
-      "end": 38.92,
-      "text": "Now, let's see three short and real life examples."
+      "start": 8.82,
+      "end": 11.46,
+      "text": "or what someone is and the",
+      "words": [
+        {
+          "word": "or",
+          "start": 8.82,
+          "end": 9.54
+        },
+        {
+          "word": "what",
+          "start": 9.54,
+          "end": 9.82
+        },
+        {
+          "word": "someone",
+          "start": 9.82,
+          "end": 10.1
+        },
+        {
+          "word": "is",
+          "start": 10.1,
+          "end": 10.52
+        },
+        {
+          "word": "and",
+          "start": 10.52,
+          "end": 11.2
+        },
+        {
+          "word": "the",
+          "start": 11.2,
+          "end": 11.46
+        }
+      ]
     },
     {
       "id": 4,
-      "start": 38.92,
-      "end": 53.96,
-      "text": "I am happy, I am happy, you are tired, you are tired, he is a teacher, she is a student, he is a teacher, she is a student."
+      "start": 11.46,
+      "end": 13.62,
+      "text": "forms are I am",
+      "words": [
+        {
+          "word": "forms",
+          "start": 11.46,
+          "end": 11.74
+        },
+        {
+          "word": "are",
+          "start": 11.74,
+          "end": 12.96
+        },
+        {
+          "word": "I",
+          "start": 12.96,
+          "end": 13.18
+        },
+        {
+          "word": "am",
+          "start": 13.18,
+          "end": 13.62
+        }
+      ]
     },
     {
       "id": 5,
-      "start": 53.96,
-      "end": 59.72,
-      "text": "Now it's your turn. Fill in the blanks and repeat after me."
+      "start": 14,
+      "end": 15.94,
+      "text": "I am",
+      "words": [
+        {
+          "word": "I",
+          "start": 14,
+          "end": 15.46
+        },
+        {
+          "word": "am",
+          "start": 15.46,
+          "end": 15.94
+        }
+      ]
     },
     {
       "id": 6,
-      "start": 59.72,
-      "end": 79.64,
-      "text": "I, happy, did you say am? Yeah, that's correct. I am happy, you, tired, you, tired, he, a teacher."
+      "start": 16.58,
+      "end": 17.54,
+      "text": "you are",
+      "words": [
+        {
+          "word": "you",
+          "start": 16.58,
+          "end": 16.74
+        },
+        {
+          "word": "are",
+          "start": 16.74,
+          "end": 17.54
+        }
+      ]
     },
     {
       "id": 7,
-      "start": 79.64,
-      "end": 85.56,
-      "text": "Practice makes perfect. Like and save this lesson and practice, practice, practice."
+      "start": 18.18,
+      "end": 21.44,
+      "text": "you are and he is",
+      "words": [
+        {
+          "word": "you",
+          "start": 18.18,
+          "end": 18.38
+        },
+        {
+          "word": "are",
+          "start": 18.38,
+          "end": 18.86
+        },
+        {
+          "word": "and",
+          "start": 18.86,
+          "end": 20.64
+        },
+        {
+          "word": "he",
+          "start": 20.64,
+          "end": 20.96
+        },
+        {
+          "word": "is",
+          "start": 20.96,
+          "end": 21.44
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "start": 22.1,
+      "end": 22.74,
+      "text": "he is",
+      "words": [
+        {
+          "word": "he",
+          "start": 22.1,
+          "end": 22.34
+        },
+        {
+          "word": "is",
+          "start": 22.34,
+          "end": 22.74
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "start": 24.22,
+      "end": 24.86,
+      "text": "she is",
+      "words": [
+        {
+          "word": "she",
+          "start": 24.22,
+          "end": 24.34
+        },
+        {
+          "word": "is",
+          "start": 24.34,
+          "end": 24.86
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "start": 25.32,
+      "end": 27.82,
+      "text": "she is Use them to say",
+      "words": [
+        {
+          "word": "she",
+          "start": 25.32,
+          "end": 25.54
+        },
+        {
+          "word": "is",
+          "start": 25.54,
+          "end": 25.96
+        },
+        {
+          "word": "Use",
+          "start": 25.96,
+          "end": 26.5
+        },
+        {
+          "word": "them",
+          "start": 26.5,
+          "end": 26.82
+        },
+        {
+          "word": "to",
+          "start": 26.82,
+          "end": 27.58
+        },
+        {
+          "word": "say",
+          "start": 27.58,
+          "end": 27.82
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "start": 27.82,
+      "end": 29.58,
+      "text": "who someone is",
+      "words": [
+        {
+          "word": "who",
+          "start": 27.82,
+          "end": 28.52
+        },
+        {
+          "word": "someone",
+          "start": 28.52,
+          "end": 28.84
+        },
+        {
+          "word": "is",
+          "start": 28.84,
+          "end": 29.58
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "start": 30.88,
+      "end": 33.68,
+      "text": "how they feel or their job",
+      "words": [
+        {
+          "word": "how",
+          "start": 30.88,
+          "end": 31.06
+        },
+        {
+          "word": "they",
+          "start": 31.06,
+          "end": 31.3
+        },
+        {
+          "word": "feel",
+          "start": 31.3,
+          "end": 31.72
+        },
+        {
+          "word": "or",
+          "start": 32.04,
+          "end": 33.12
+        },
+        {
+          "word": "their",
+          "start": 33.12,
+          "end": 33.3
+        },
+        {
+          "word": "job",
+          "start": 33.3,
+          "end": 33.68
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "start": 33.82,
+      "end": 37.18,
+      "text": "Now let's see three short and",
+      "words": [
+        {
+          "word": "Now",
+          "start": 33.82,
+          "end": 34.32
+        },
+        {
+          "word": "let's",
+          "start": 34.32,
+          "end": 34.82
+        },
+        {
+          "word": "see",
+          "start": 34.82,
+          "end": 35.34
+        },
+        {
+          "word": "three",
+          "start": 35.34,
+          "end": 35.94
+        },
+        {
+          "word": "short",
+          "start": 35.94,
+          "end": 36.5
+        },
+        {
+          "word": "and",
+          "start": 36.5,
+          "end": 37.18
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "start": 37.18,
+      "end": 38.7,
+      "text": "real life examples",
+      "words": [
+        {
+          "word": "real",
+          "start": 37.18,
+          "end": 37.42
+        },
+        {
+          "word": "life",
+          "start": 37.42,
+          "end": 38.08
+        },
+        {
+          "word": "examples",
+          "start": 38.08,
+          "end": 38.7
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "start": 39.26,
+      "end": 39.84,
+      "text": "I am happy",
+      "words": [
+        {
+          "word": "I",
+          "start": 39.26,
+          "end": 39.26
+        },
+        {
+          "word": "am",
+          "start": 39.26,
+          "end": 39.44
+        },
+        {
+          "word": "happy",
+          "start": 39.44,
+          "end": 39.84
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "start": 40.7,
+      "end": 41.94,
+      "text": "I am happy",
+      "words": [
+        {
+          "word": "I",
+          "start": 40.7,
+          "end": 41.44
+        },
+        {
+          "word": "am",
+          "start": 41.44,
+          "end": 41.6
+        },
+        {
+          "word": "happy",
+          "start": 41.6,
+          "end": 41.94
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "start": 42.72,
+      "end": 43.52,
+      "text": "You are tired",
+      "words": [
+        {
+          "word": "You",
+          "start": 42.72,
+          "end": 42.9
+        },
+        {
+          "word": "are",
+          "start": 42.9,
+          "end": 43.52
+        },
+        {
+          "word": "tired",
+          "start": 43.52,
+          "end": 43.52
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "start": 45.1,
+      "end": 46.52,
+      "text": "You are tired",
+      "words": [
+        {
+          "word": "You",
+          "start": 45.1,
+          "end": 46
+        },
+        {
+          "word": "are",
+          "start": 46,
+          "end": 46.34
+        },
+        {
+          "word": "tired",
+          "start": 46.34,
+          "end": 46.52
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "start": 47.34,
+      "end": 48.34,
+      "text": "He is a teacher",
+      "words": [
+        {
+          "word": "He",
+          "start": 47.34,
+          "end": 47.72
+        },
+        {
+          "word": "is",
+          "start": 47.72,
+          "end": 47.82
+        },
+        {
+          "word": "a",
+          "start": 47.82,
+          "end": 48.34
+        },
+        {
+          "word": "teacher",
+          "start": 48.34,
+          "end": 48.34
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "start": 49.2,
+      "end": 50.06,
+      "text": "She is a student",
+      "words": [
+        {
+          "word": "She",
+          "start": 49.2,
+          "end": 49.54
+        },
+        {
+          "word": "is",
+          "start": 49.54,
+          "end": 49.62
+        },
+        {
+          "word": "a",
+          "start": 49.62,
+          "end": 50.06
+        },
+        {
+          "word": "student",
+          "start": 50.06,
+          "end": 50.06
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "start": 50.72,
+      "end": 52.06,
+      "text": "He is a teacher",
+      "words": [
+        {
+          "word": "He",
+          "start": 50.72,
+          "end": 51.5
+        },
+        {
+          "word": "is",
+          "start": 51.5,
+          "end": 51.6
+        },
+        {
+          "word": "a",
+          "start": 51.6,
+          "end": 52.06
+        },
+        {
+          "word": "teacher",
+          "start": 52.06,
+          "end": 52.06
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "start": 53.18,
+      "end": 54.38,
+      "text": "She is a student Now it's",
+      "words": [
+        {
+          "word": "She",
+          "start": 53.18,
+          "end": 53.32
+        },
+        {
+          "word": "is",
+          "start": 53.32,
+          "end": 53.38
+        },
+        {
+          "word": "a",
+          "start": 53.38,
+          "end": 53.8
+        },
+        {
+          "word": "student",
+          "start": 53.8,
+          "end": 53.8
+        },
+        {
+          "word": "Now",
+          "start": 53.8,
+          "end": 54.22
+        },
+        {
+          "word": "it's",
+          "start": 54.22,
+          "end": 54.38
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "start": 54.38,
+      "end": 54.92,
+      "text": "your turn",
+      "words": [
+        {
+          "word": "your",
+          "start": 54.38,
+          "end": 54.62
+        },
+        {
+          "word": "turn",
+          "start": 54.62,
+          "end": 54.92
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "start": 56.4,
+      "end": 58.32,
+      "text": "Fill in the blanks and repeat",
+      "words": [
+        {
+          "word": "Fill",
+          "start": 56.4,
+          "end": 56.48
+        },
+        {
+          "word": "in",
+          "start": 56.48,
+          "end": 56.66
+        },
+        {
+          "word": "the",
+          "start": 56.66,
+          "end": 57.08
+        },
+        {
+          "word": "blanks",
+          "start": 57.08,
+          "end": 57.5
+        },
+        {
+          "word": "and",
+          "start": 57.5,
+          "end": 58.12
+        },
+        {
+          "word": "repeat",
+          "start": 58.12,
+          "end": 58.32
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "start": 58.32,
+      "end": 59,
+      "text": "after me",
+      "words": [
+        {
+          "word": "after",
+          "start": 58.32,
+          "end": 58.58
+        },
+        {
+          "word": "me",
+          "start": 58.58,
+          "end": 59
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "start": 60.54,
+      "end": 62.22,
+      "text": "I happy",
+      "words": [
+        {
+          "word": "I",
+          "start": 60.54,
+          "end": 61.38
+        },
+        {
+          "word": "happy",
+          "start": 61.38,
+          "end": 62.22
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "start": 63.9,
+      "end": 65.18,
+      "text": "Did you say am",
+      "words": [
+        {
+          "word": "Did",
+          "start": 63.9,
+          "end": 64.02
+        },
+        {
+          "word": "you",
+          "start": 64.02,
+          "end": 64.26
+        },
+        {
+          "word": "say",
+          "start": 64.26,
+          "end": 64.64
+        },
+        {
+          "word": "am",
+          "start": 64.64,
+          "end": 65.18
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "start": 65.96,
+      "end": 68.6,
+      "text": "Yeah that's correct I am happy",
+      "words": [
+        {
+          "word": "Yeah",
+          "start": 65.96,
+          "end": 66.2
+        },
+        {
+          "word": "that's",
+          "start": 66.2,
+          "end": 67.32
+        },
+        {
+          "word": "correct",
+          "start": 67.32,
+          "end": 67.32
+        },
+        {
+          "word": "I",
+          "start": 67.54,
+          "end": 67.78
+        },
+        {
+          "word": "am",
+          "start": 67.78,
+          "end": 68.24
+        },
+        {
+          "word": "happy",
+          "start": 68.24,
+          "end": 68.6
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "start": 69.7,
+      "end": 71.38,
+      "text": "You tired",
+      "words": [
+        {
+          "word": "You",
+          "start": 69.7,
+          "end": 70.54
+        },
+        {
+          "word": "tired",
+          "start": 70.54,
+          "end": 71.38
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "start": 72.56,
+      "end": 75.24,
+      "text": "You tired",
+      "words": [
+        {
+          "word": "You",
+          "start": 72.56,
+          "end": 73.08
+        },
+        {
+          "word": "tired",
+          "start": 73.08,
+          "end": 75.24
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "start": 76,
+      "end": 76.56,
+      "text": "Yeah",
+      "words": [
+        {
+          "word": "Yeah",
+          "start": 76,
+          "end": 76.56
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "start": 77.54,
+      "end": 80.84,
+      "text": "He a teacher Practice makes perfect",
+      "words": [
+        {
+          "word": "He",
+          "start": 77.54,
+          "end": 78.38
+        },
+        {
+          "word": "a",
+          "start": 78.38,
+          "end": 79.22
+        },
+        {
+          "word": "teacher",
+          "start": 79.22,
+          "end": 79.42
+        },
+        {
+          "word": "Practice",
+          "start": 79.42,
+          "end": 80.12
+        },
+        {
+          "word": "makes",
+          "start": 80.12,
+          "end": 80.38
+        },
+        {
+          "word": "perfect",
+          "start": 80.38,
+          "end": 80.84
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "start": 81.7,
+      "end": 83.8,
+      "text": "Like and save this lesson and",
+      "words": [
+        {
+          "word": "Like",
+          "start": 81.7,
+          "end": 81.7
+        },
+        {
+          "word": "and",
+          "start": 81.7,
+          "end": 82.02
+        },
+        {
+          "word": "save",
+          "start": 82.02,
+          "end": 82.28
+        },
+        {
+          "word": "this",
+          "start": 82.28,
+          "end": 82.56
+        },
+        {
+          "word": "lesson",
+          "start": 82.56,
+          "end": 82.92
+        },
+        {
+          "word": "and",
+          "start": 82.92,
+          "end": 83.8
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "start": 83.8,
+      "end": 84.26,
+      "text": "practice",
+      "words": [
+        {
+          "word": "practice",
+          "start": 83.8,
+          "end": 84.26
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "start": 84.86,
+      "end": 84.86,
+      "text": "practice",
+      "words": [
+        {
+          "word": "practice",
+          "start": 84.86,
+          "end": 84.86
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "start": 85.46,
+      "end": 85.46,
+      "text": "practice",
+      "words": [
+        {
+          "word": "practice",
+          "start": 85.46,
+          "end": 85.46
+        }
+      ]
     }
   ]
 }

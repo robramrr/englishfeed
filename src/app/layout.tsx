@@ -18,6 +18,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EnglishFeed – Learn English in short lessons",
   description: "TikTok-style vertical feed of short English lessons.",
+  icons: {
+    icon: "https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783142988/englishfeed/logo/englishfeed-faviicon.png",
+    shortcut:
+      "https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783142988/englishfeed/logo/englishfeed-faviicon.png",
+    apple:
+      "https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783142988/englishfeed/logo/englishfeed-faviicon.png",
+  },
 };
 
 export default function RootLayout({

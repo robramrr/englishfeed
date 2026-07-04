@@ -225,13 +225,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const file = new File([audio], "recording.webm", { type: audio.type });
+    const audioType = audio.type || "audio/webm";
+    const ext = audioType.toLowerCase().includes("mp4")
+      || audioType.toLowerCase().includes("aac")
+      ? "m4a"
+      : audioType.toLowerCase().includes("ogg")
+        ? "ogg"
+        : "webm";
+    const file = new File([audio], `recording.${ext}`, { type: audioType });
     const transcription = await openai.audio.transcriptions.create({
       file,
       model: "whisper-1",
+      language: "en",
+      prompt: expected,
     });
     const transcript =
       typeof transcription.text === "string" ? transcription.text.trim() : "";
+
+    if (!transcript) {
+      return NextResponse.json(
+        {
+          error:
+            "No speech detected in the recording. Speak louder, hold record a little longer, or check your microphone.",
+        },
+        { status: 422 }
+      );
+    }
 
     const { score, feedback } = compareSentences(expected, transcript);
 

@@ -2,9 +2,8 @@
  * Generate subtitles from a video's audio using OpenAI Whisper.
  * Downloads the video from Cloudflare R2, runs speech-to-text, saves JSON.
  *
- * Usage: npx tsx scripts/generateSubtitles.ts <video-filename>
- * Example: npx tsx scripts/generateSubtitles.ts video.mp4
- * Example: npx tsx scripts/generateSubtitles.ts carolina-lesson.mp4
+ * Usage: npx tsx scripts/generateSubtitles.ts [--force] <video-filename>
+ * Example: npx tsx scripts/generateSubtitles.ts --force simple-present-verb-to-be.mp4
  *
  * Output: public/subtitles/<video-name>.json
  * Requires: OPENAI_API_KEY
@@ -18,11 +17,13 @@ import { generateSubtitlesForVideo } from "../src/lib/generateSubtitlesForVideo"
 dotenv.config({ path: path.resolve(__dirname, "..", ".env.local") });
 
 async function main() {
-  const videoFilename = process.argv[2];
-  if (!videoFilename || !videoFilename.includes(".")) {
-    console.error("Usage: npx tsx scripts/generateSubtitles.ts <video-filename>");
-    console.error("Example: npx tsx scripts/generateSubtitles.ts video.mp4");
-    console.error("Example: npx tsx scripts/generateSubtitles.ts carolina-lesson.mp4");
+  const args = process.argv.slice(2);
+  const force = args.includes("--force");
+  const videoFilename = args.find((arg) => arg.includes("."));
+
+  if (!videoFilename) {
+    console.error("Usage: npx tsx scripts/generateSubtitles.ts [--force] <video-filename>");
+    console.error("Example: npx tsx scripts/generateSubtitles.ts --force simple-present-verb-to-be.mp4");
     process.exit(1);
   }
 
@@ -31,8 +32,8 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`Generating subtitles for: ${videoFilename}`);
-  await generateSubtitlesForVideo(videoFilename);
+  console.log(`Generating subtitles for: ${videoFilename}${force ? " (force)" : ""}`);
+  await generateSubtitlesForVideo(videoFilename, { force });
   console.log("Done.");
 }
 

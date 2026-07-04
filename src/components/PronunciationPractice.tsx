@@ -1,7 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Mic } from "lucide-react";
+import {
+  connectAnalyserForMonitoring,
+  createMediaRecorder,
+  createTimeDomainBuffer,
+  openMicStream,
+  peakFromTimeDomain,
+  recordingFilenameForMime,
+  stopMediaRecorder,
+  stopStream,
+} from "@/lib/audioRecording";
 import { speakWord } from "@/lib/pronunciation";
 
 /** Stereo / volume waves — same as quiz & subtitle popup */
@@ -69,12 +80,15 @@ export function PronunciationPractice({
 }: PronunciationPracticeProps) {
   const API_COOLDOWN_MS = 3000;
   const MIN_RECORDING_MS = 1500;
+  const MIN_AUDIO_BYTES = 500;
+  const MIN_AUDIO_PEAK = 6;
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [result, setResult] = useState<PronunciationResult | null>(null);
   const [showThaiTranslation, setShowThaiTranslation] = useState(false);
   const [thaiSentence, setThaiSentence] = useState<string | null>(null);
   const [thaiLoading, setThaiLoading] = useState(false);
+  const [micInputWarning, setMicInputWarning] = useState(false);
   const thaiCacheRef = useRef<Map<string, string>>(new Map());
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -91,6 +105,10 @@ export function PronunciationPractice({
   const visualizationActiveRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
   const waveDataArrayRef = useRef<Uint8Array | null>(null);
+  const peakLevelRef = useRef(0);
+  const recordingBusyRef = useRef(false);
+  const recordStreamRef = useRef<MediaStream | null>(null);
+  const monitorStreamRef = useRef<MediaStream | null>(null);
 
   const teardownLiveWaveform = useCallback(() => {
     visualizationActiveRef.current = false;
@@ -154,22 +172,40 @@ export function PronunciationPractice({
   }, [expectedSentence, showThaiTranslation]);
 
   const startRecording = useCallback(async () => {
-    let stream: MediaStream | null = null;
+    if (recordingBusyRef.current) return;
+    recordingBusyRef.current = true;
+    let micStream: MediaStream | null = null;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
-      const recorder = new MediaRecorder(stream);
+      micStream = await openMicStream();
+      const recordStream = micStream.clone();
+      const monitorStream = micStream.clone();
+      recordStreamRef.current = recordStream;
+      monitorStreamRef.current = monitorStream;
+      peakLevelRef.current = 0;
+      setMicInputWarning(false);
+
+      flushSync(() => setStatus("recording"));
+
+      const { recorder, mimeType: mime } = createMediaRecorder(recordStream);
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
 
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
+      recorder.onerror = () => {
+        setErrorMessage("Recording failed. Try again.");
+        setStatus("error");
+      };
       recorder.onstop = async () => {
         teardownLiveWaveform();
-        stream!.getTracks().forEach((t) => t.stop());
+        stopStream(micStream);
+        stopStream(recordStreamRef.current);
+        stopStream(monitorStreamRef.current);
+        recordStreamRef.current = null;
+        monitorStreamRef.current = null;
+        recordingBusyRef.current = false;
+
         const recordingDurationMs = Date.now() - recordingStartedAtMsRef.current;
         if (recordingDurationMs < MIN_RECORDING_MS) {
           setStatus("idle");
@@ -193,13 +229,22 @@ export function PronunciationPractice({
         }
         lastApiCallAtMsRef.current = now;
 
+        const totalBytes = chunksRef.current.reduce((sum, chunk) => sum + chunk.size, 0);
+        if (totalBytes < MIN_AUDIO_BYTES || peakLevelRef.current < MIN_AUDIO_PEAK) {
+          setErrorMessage(
+            "No speech detected. Check Chrome's mic permission (lock icon in the address bar), speak louder, and watch for the waveform to move."
+          );
+          setStatus("error");
+          return;
+        }
+
         const blob = new Blob(chunksRef.current, { type: mime });
         setStatus("processing");
         setErrorMessage(null);
         setResult(null);
 
         const formData = new FormData();
-        formData.append("audio", blob, "recording.webm");
+        formData.append("audio", blob, recordingFilenameForMime(mime));
         formData.append("expectedSentence", expectedSentence);
 
         try {
@@ -275,7 +320,10 @@ export function PronunciationPractice({
 
       const AC = getAudioContextConstructor();
       if (!AC) {
-        stream.getTracks().forEach((t) => t.stop());
+        stopStream(micStream);
+        stopStream(recordStream);
+        stopStream(monitorStream);
+        recordingBusyRef.current = false;
         setErrorMessage("Audio visualization is not supported in this browser.");
         setStatus("error");
         return;
@@ -283,17 +331,15 @@ export function PronunciationPractice({
 
       const audioContext = new AC();
       await audioContext.resume();
-      const source = audioContext.createMediaStreamSource(stream);
+      const source = audioContext.createMediaStreamSource(monitorStream);
       const analyser = audioContext.createAnalyser();
       analyser.fftSize = 1024;
-      analyser.smoothingTimeConstant = 0.65;
-      source.connect(analyser);
+      analyser.smoothingTimeConstant = 0.35;
+      connectAnalyserForMonitoring(source, analyser, audioContext);
       audioContextRef.current = audioContext;
       analyserRef.current = analyser;
       mediaStreamSourceRef.current = source;
-      waveDataArrayRef.current = new Uint8Array(
-        new ArrayBuffer(analyser.frequencyBinCount)
-      );
+      waveDataArrayRef.current = createTimeDomainBuffer(analyser);
 
       const syncWaveCanvasSizeIfNeeded = () => {
         const canvas = waveCanvasRef.current;
@@ -330,8 +376,11 @@ export function PronunciationPractice({
             const w = Math.max(1, Math.floor(wrap.clientWidth));
             const h = WAVE_CANVAS_LOGICAL_H;
             analyserNode.getByteTimeDomainData(
-              data as unknown as Uint8Array<ArrayBuffer>
+              data as Uint8Array<ArrayBuffer>
             );
+            const peak = peakFromTimeDomain(data);
+            if (peak > peakLevelRef.current) peakLevelRef.current = peak;
+            if (peak >= MIN_AUDIO_PEAK) setMicInputWarning(false);
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, w, h);
             ctx.strokeStyle = "#000000";
@@ -354,14 +403,27 @@ export function PronunciationPractice({
         animationFrameRef.current = requestAnimationFrame(drawWaveform);
       };
 
-      recorder.start(100);
+      recorder.start(250);
       recordingStartedAtMsRef.current = Date.now();
-      setStatus("recording");
+      window.setTimeout(() => {
+        if (peakLevelRef.current < MIN_AUDIO_PEAK) {
+          setMicInputWarning(true);
+        }
+      }, 700);
       animationFrameRef.current = requestAnimationFrame(drawWaveform);
     } catch (e) {
       teardownLiveWaveform();
-      stream?.getTracks().forEach((t) => t.stop());
-      setErrorMessage("Microphone access denied or unavailable.");
+      stopStream(micStream);
+      stopStream(recordStreamRef.current);
+      stopStream(monitorStreamRef.current);
+      recordStreamRef.current = null;
+      monitorStreamRef.current = null;
+      recordingBusyRef.current = false;
+      setErrorMessage(
+        e instanceof Error && e.message
+          ? e.message
+          : "Microphone access denied or unavailable."
+      );
       setStatus("error");
     }
   }, [expectedSentence, teardownLiveWaveform]);
@@ -369,7 +431,7 @@ export function PronunciationPractice({
   const stopRecording = useCallback(() => {
     const recorder = mediaRecorderRef.current;
     if (recorder && status === "recording" && recorder.state !== "inactive") {
-      recorder.stop();
+      stopMediaRecorder(recorder);
     }
   }, [status]);
 
@@ -377,6 +439,7 @@ export function PronunciationPractice({
     setStatus("idle");
     setErrorMessage(null);
     setResult(null);
+    setMicInputWarning(false);
   }, []);
 
   const label =
@@ -481,6 +544,13 @@ export function PronunciationPractice({
               aria-label="Live input level"
             />
           </div>
+
+          {status === "recording" && micInputWarning && (
+            <p className="text-sm font-bold text-amber-700">
+              No mic input detected — check Chrome&apos;s mic permission (lock icon in
+              the address bar) and your system input device.
+            </p>
+          )}
 
           {status === "idle" && (
             <button

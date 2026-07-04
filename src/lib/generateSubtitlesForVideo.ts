@@ -7,6 +7,7 @@
 import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
+import { buildSubtitleSegmentsFromWhisper } from "@/lib/subtitleProcessing";
 
 const R2_PUBLIC_BASE = "https://pub-f15ee3d0e2ea44a6ab6b5985df74d4a5.r2.dev";
 
@@ -36,34 +37,26 @@ export function needsSubtitleGeneration(videoFilename: string): boolean {
   return !subtitleFileExistsWithSegments(outputPath);
 }
 
-interface VerboseSegment {
-  start?: number;
-  end?: number;
-  text?: string;
-}
-
-interface VerboseTranscription {
-  segments?: VerboseSegment[];
-}
-
-interface OutputSegment {
-  id: number;
-  start: number;
-  end: number;
-  text: string;
-}
+export type GenerateSubtitlesOptions = {
+  /** Replace an existing subtitle file. */
+  force?: boolean;
+};
 
 /**
  * Generate subtitles for a video. Runs only in Node (server).
  * If the subtitle file already exists with segments, returns immediately (cache).
  * Otherwise downloads the video from R2, runs Whisper, writes JSON.
  */
-export async function generateSubtitlesForVideo(videoFilename: string): Promise<void> {
+export async function generateSubtitlesForVideo(
+  videoFilename: string,
+  options?: GenerateSubtitlesOptions
+): Promise<void> {
   if (!videoFilename || !videoFilename.includes(".")) return;
 
-  const { projectRoot, publicSubtitlesDir, outputPath, videoName } = getPaths(videoFilename);
+  const { projectRoot, publicSubtitlesDir, outputPath, videoName } =
+    getPaths(videoFilename);
 
-  if (subtitleFileExistsWithSegments(outputPath)) {
+  if (!options?.force && subtitleFileExistsWithSegments(outputPath)) {
     return;
   }
 
@@ -95,19 +88,20 @@ export async function generateSubtitlesForVideo(videoFilename: string): Promise<
       file: fs.createReadStream(tempPath),
       model: "whisper-1",
       response_format: "verbose_json",
+      timestamp_granularities: ["word", "segment"],
     });
 
-    const data = transcription as unknown as VerboseTranscription;
-    const rawSegments = data.segments ?? [];
-
-    const segments: OutputSegment[] = rawSegments
-      .filter((seg) => (seg.text ?? "").trim())
-      .map((seg, i) => ({
-        id: i,
-        start: Math.round((seg.start ?? 0) * 100) / 100,
-        end: Math.round((seg.end ?? 0) * 100) / 100,
-        text: (seg.text ?? "").trim(),
-      }));
+    const segments = buildSubtitleSegmentsFromWhisper(
+      transcription as unknown as {
+        segments?: Array<{
+          start?: number;
+          end?: number;
+          text?: string;
+          words?: Array<{ word?: string; start?: number; end?: number }>;
+        }>;
+        words?: Array<{ word?: string; start?: number; end?: number }>;
+      }
+    );
 
     const output = { segments };
 

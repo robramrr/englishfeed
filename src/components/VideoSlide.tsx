@@ -33,6 +33,12 @@ import { CameraVocabFeedOverlay } from "@/components/CameraVocabFeedOverlay";
 import { CameraVocabQuizModal } from "@/components/CameraVocabQuizModal";
 import { useCameraVocabExercise } from "@/hooks/useCameraVocabExercise";
 import {
+  buildPlaybackSubtitleSegments,
+  findActiveSubtitle,
+  type PlaybackSubtitleSegment,
+  type WordTiming,
+} from "@/lib/subtitlePlayback";
+import {
   Bookmark,
   BookOpen,
   Bot,
@@ -54,16 +60,7 @@ interface SubtitleSegment {
   start: number;
   end: number;
   text: string;
-}
-
-interface WordTiming {
-  word: string;
-  start: number;
-  end: number;
-}
-
-interface WordLevelSegment {
-  words: WordTiming[];
+  words?: WordTiming[];
 }
 
 interface SubtitlesData {
@@ -375,11 +372,12 @@ export function VideoSlide({
     Map<string, Map<string, ContextDefinitionData>>
   >(new Map());
   const contextSentencePrefetchingRef = useRef<Set<string>>(new Set());
-  const [wordLevelSegments, setWordLevelSegments] = useState<
-    WordLevelSegment[]
+  const [playbackSubtitleSegments, setPlaybackSubtitleSegments] = useState<
+    PlaybackSubtitleSegment[]
   >([]);
   const [currentWords, setCurrentWords] = useState<WordTiming[]>([]);
   const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
+  const subtitleSyncRef = useRef({ segmentIndex: -1, wordIndex: -1 });
   const videoRef = useRef<HTMLVideoElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -414,32 +412,11 @@ export function VideoSlide({
     rawSubtitleSegments,
   ]);
 
-  // Convert segment text into word-level timings (duration distributed evenly)
-  const segmentsToWordLevel = useCallback(
-    (segments: SubtitleSegment[]): WordLevelSegment[] => {
-      return segments.map((seg) => {
-        const words = seg.text.split(/\s+/).filter(Boolean);
-        if (words.length === 0) {
-          return { words: [] };
-        }
-        const duration = seg.end - seg.start;
-        const slot = duration / words.length;
-        const wordsWithTiming: WordTiming[] = words.map((word, i) => ({
-          word,
-          start: seg.start + i * slot,
-          end: seg.start + (i + 1) * slot,
-        }));
-        return { words: wordsWithTiming };
-      });
-    },
-    []
-  );
-
   // Fetch per-lesson subtitles; clear immediately when lesson changes so previous subtitles never persist
   useEffect(() => {
     let cancelled = false;
 
-    setWordLevelSegments([]);
+    setPlaybackSubtitleSegments([]);
     setRawSubtitleSegments([]);
 
     if (!lesson.subtitlesUrl) return;
@@ -448,13 +425,13 @@ export function VideoSlide({
       .then((res) => (res.ok ? res.json() : null))
       .then((data: SubtitlesData | null) => {
         if (!cancelled && data?.segments && Array.isArray(data.segments)) {
-          setWordLevelSegments(segmentsToWordLevel(data.segments));
+          setPlaybackSubtitleSegments(buildPlaybackSubtitleSegments(data.segments));
           setRawSubtitleSegments(data.segments);
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setWordLevelSegments([]);
+          setPlaybackSubtitleSegments([]);
           setRawSubtitleSegments([]);
         }
       });
@@ -462,35 +439,30 @@ export function VideoSlide({
     return () => {
       cancelled = true;
     };
-  }, [lesson.subtitlesUrl, segmentsToWordLevel]);
+  }, [lesson.subtitlesUrl]);
 
-  // Track video currentTime and update active segment + active word
+  // Sync subtitles every frame while playing; also on timeupdate as a backup.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || wordLevelSegments.length === 0) return;
-
-    const onTimeUpdate = () => {
-      const SUBTITLE_OFFSET = 0.08;
-      const adjustedTime = video.currentTime + SUBTITLE_OFFSET;
-      const t = adjustedTime;
-      let segmentIndex = -1;
-      let wordIndex = -1;
-
-      for (let i = 0; i < wordLevelSegments.length; i++) {
-        const seg = wordLevelSegments[i];
-        for (let j = 0; j < seg.words.length; j++) {
-          const w = seg.words[j];
-          if (t >= w.start && t <= w.end) {
-            segmentIndex = i;
-            wordIndex = j;
-            break;
-          }
-        }
-        if (segmentIndex >= 0) break;
+    if (!video || playbackSubtitleSegments.length === 0 || !isVisible) {
+      if (!isVisible) {
+        subtitleSyncRef.current = { segmentIndex: -1, wordIndex: -1 };
+        setCurrentWords([]);
+        setActiveWordIndex(-1);
       }
+      return;
+    }
 
+    let rafId = 0;
+
+    const applySubtitle = (segmentIndex: number, wordIndex: number) => {
+      const prev = subtitleSyncRef.current;
+      if (prev.segmentIndex === segmentIndex && prev.wordIndex === wordIndex) {
+        return;
+      }
+      subtitleSyncRef.current = { segmentIndex, wordIndex };
       if (segmentIndex >= 0) {
-        setCurrentWords(wordLevelSegments[segmentIndex].words);
+        setCurrentWords(playbackSubtitleSegments[segmentIndex]!.words);
         setActiveWordIndex(wordIndex);
       } else {
         setCurrentWords([]);
@@ -498,10 +470,58 @@ export function VideoSlide({
       }
     };
 
-    video.addEventListener("timeupdate", onTimeUpdate);
-    onTimeUpdate();
-    return () => video.removeEventListener("timeupdate", onTimeUpdate);
-  }, [wordLevelSegments]);
+    const syncSubtitles = () => {
+      const { segmentIndex, wordIndex } = findActiveSubtitle(
+        playbackSubtitleSegments,
+        video.currentTime
+      );
+      applySubtitle(segmentIndex, wordIndex);
+    };
+
+    const tick = () => {
+      syncSubtitles();
+      if (!video.paused && !video.ended) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    const startTicking = () => {
+      cancelAnimationFrame(rafId);
+      syncSubtitles();
+      tick();
+    };
+
+    const stopTicking = () => {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    };
+
+    const onEnded = () => {
+      stopTicking();
+      syncSubtitles();
+    };
+
+    video.addEventListener("seeked", syncSubtitles);
+    video.addEventListener("timeupdate", syncSubtitles);
+    video.addEventListener("play", startTicking);
+    video.addEventListener("playing", startTicking);
+    video.addEventListener("pause", stopTicking);
+    video.addEventListener("ended", onEnded);
+    syncSubtitles();
+    if (!video.paused && !video.ended) {
+      startTicking();
+    }
+
+    return () => {
+      stopTicking();
+      video.removeEventListener("seeked", syncSubtitles);
+      video.removeEventListener("timeupdate", syncSubtitles);
+      video.removeEventListener("play", startTicking);
+      video.removeEventListener("playing", startTicking);
+      video.removeEventListener("pause", stopTicking);
+      video.removeEventListener("ended", onEnded);
+    };
+  }, [playbackSubtitleSegments, isVisible]);
 
   // IntersectionObserver (root = scroll container): play when visible, pause and reset when not
   useEffect(() => {
@@ -861,8 +881,8 @@ export function VideoSlide({
   const handleVideoClick = () => {
     const video = videoRef.current;
     if (!video || videoError) return;
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
   };
 
   const handleSoundClick = (e: React.MouseEvent) => {
@@ -959,30 +979,32 @@ export function VideoSlide({
         <>
           {/* Subtle watermark logo (non-interactive, below controls) */}
           <img
-            src="https://res.cloudinary.com/dkbf7tvcx/image/upload/englishfully/logo/englishfeed.png"
+            src="https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783143201/englishfeed/logo/englishfeed-logo.png"
             alt=""
             aria-hidden="true"
             className="pointer-events-none absolute left-3 top-3 z-[5] h-10 w-auto opacity-[0.25]"
           />
-          <div className="absolute inset-0 min-h-0 min-w-0 overflow-hidden">
-            {/* Side gutters when video is letterboxed (object-contain): match toolbar blue / like red */}
+          <div
+            className="absolute inset-0 min-h-0 min-w-0 overflow-hidden"
+            onClick={handleVideoClick}
+            role="presentation"
+          >
             <div className="flex h-full min-h-0 w-full min-w-0 flex-row">
               <div
-                className="min-h-0 min-w-0 flex-1 bg-gradient-to-b from-blue-500 to-blue-600"
+                className="hidden min-h-0 min-w-0 flex-1 bg-gradient-to-b from-blue-500 to-blue-600 md:block"
                 aria-hidden
               />
-              <div className="relative flex h-full shrink-0 items-center justify-center">
+              <div className="relative flex h-full shrink-0 items-center justify-start md:justify-center">
                 <video
                   key={lesson.id}
                   ref={videoRef}
                   src={lesson.videoUrl}
-                  className="block max-h-full w-auto max-w-full object-contain"
+                  className="block h-full w-auto max-w-full object-contain"
                   playsInline
                   muted
                   loop
                   preload="metadata"
                   onError={() => setVideoError(true)}
-                  onClick={handleVideoClick}
                   onEnded={() => {
                     trackEvent("video_complete", lesson.id, {}, userId ?? null);
                     trackEvent("replay", lesson.id, {}, userId ?? null);
@@ -1077,41 +1099,46 @@ export function VideoSlide({
         </div>
       )}
 
-      {/* TikTok-style word-level caption overlay — words are clickable */}
+      {/* Word-level caption overlay — fixed-height bar above controls */}
       {isVisible && currentWords.length > 0 && (
         <div
-          className="fixed left-1/2 z-30 flex -translate-x-1/2 flex-wrap items-center justify-center gap-x-2 gap-y-0 px-4 py-2 text-center"
+          className="pointer-events-none fixed z-30 left-3 right-[4.75rem] md:left-1/2 md:right-auto md:w-[min(92vw,24rem)] md:-translate-x-1/2"
           style={{ bottom: "var(--video-subtitles-bottom)" }}
           suppressHydrationWarning
         >
-          {currentWords.map((w, i) => (
-            <span
-              key={`${i}-${w.start}`}
-              role="button"
-              tabIndex={0}
-              className={`inline-block cursor-pointer rounded px-0.5 text-2xl font-semibold transition-colors duration-75 hover:bg-white/20 hover:underline sm:text-3xl ${
-                i === activeWordIndex ? "text-yellow-400" : "text-white"
-              }`}
-              style={{
-                textShadow:
-                  "0 1px 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8)",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                const sentence = currentWords.map((x) => x.word).join(" ");
-                handleWordClick(w.word, sentence);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  const sentence = currentWords.map((x) => x.word).join(" ");
-                  handleWordClick(w.word, sentence);
-                }
-              }}
-            >
-              {w.word}
-            </span>
-          ))}
+          <div className="pointer-events-auto flex h-8 items-center rounded-md border border-black/50 bg-black/82 px-2 shadow-[0_2px_10px_rgba(0,0,0,0.55)] backdrop-blur-[2px] md:h-[2.85rem] md:px-3">
+            <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 md:text-base md:leading-[1.35rem] lg:text-lg">
+              {currentWords.map((w, i) => (
+                <span
+                  key={`${i}-${w.start}`}
+                  role="button"
+                  tabIndex={0}
+                  className={`cursor-pointer rounded-sm px-0.5 transition-colors duration-75 hover:underline ${
+                    i === activeWordIndex ? "text-yellow-300" : "text-white"
+                  }`}
+                  style={{
+                    textShadow:
+                      "0 1px 2px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85)",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const sentence = currentWords.map((x) => x.word).join(" ");
+                    handleWordClick(w.word, sentence);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      const sentence = currentWords.map((x) => x.word).join(" ");
+                      handleWordClick(w.word, sentence);
+                    }
+                  }}
+                >
+                  {w.word}
+                  {i < currentWords.length - 1 ? " " : ""}
+                </span>
+              ))}
+            </p>
+          </div>
         </div>
       )}
 

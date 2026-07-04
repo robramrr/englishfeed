@@ -2,6 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Bot, Mic } from "lucide-react";
+import {
+  createMediaRecorder,
+  openMicStream,
+  recordingFilenameForMime,
+  stopMediaRecorder,
+  stopStream,
+} from "@/lib/audioRecording";
 import { cancelSpeech, speakWord } from "@/lib/pronunciation";
 
 export type TutorRoleplayContext = {
@@ -43,6 +50,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
   const PASSING_SCORE = 75;
   const MIN_COHERENT_WORDS = 3;
   const MIN_RECORDING_MS = 1200;
+  const MIN_AUDIO_BYTES = 500;
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -274,21 +282,19 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
   ]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state !== "inactive") {
+      stopMediaRecorder(recorder);
     }
   }, []);
 
   const startRecording = useCallback(async () => {
     if (!practiceSentence) return;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await openMicStream();
       streamRef.current = stream;
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
+      const { recorder, mimeType: mime } = createMediaRecorder(stream);
       mimeTypeRef.current = mime;
-      const recorder = new MediaRecorder(stream);
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
       setPracticeError(null);
@@ -306,11 +312,23 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
           setPracticeError("Please speak a little longer.");
           return;
         }
+        const totalBytes = chunksRef.current.reduce((sum, chunk) => sum + chunk.size, 0);
+        if (totalBytes < MIN_AUDIO_BYTES) {
+          setPracticeStatus("error");
+          setPracticeError(
+            "No audio was captured. Check your microphone is selected and try again."
+          );
+          return;
+        }
         setPracticeStatus("processing");
         try {
           const blob = new Blob(chunksRef.current, { type: mimeTypeRef.current });
           const formData = new FormData();
-          formData.append("audio", blob, "tutor-practice.webm");
+          formData.append(
+            "audio",
+            blob,
+            recordingFilenameForMime(mimeTypeRef.current)
+          );
           formData.append("expectedSentence", practiceSentence);
           const res = await fetch("/api/pronunciation-check", {
             method: "POST",
@@ -339,7 +357,7 @@ export function TutorRoleplayModal({ context, onClose }: Props) {
           );
         }
       };
-      recorder.start(100);
+      recorder.start(250);
     } catch {
       setPracticeStatus("error");
       setPracticeError("Microphone access denied or unavailable.");
