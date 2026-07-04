@@ -17,7 +17,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="fixed inset-x-0 top-0 flex w-full items-center justify-center bg-black text-zinc-400" style={{ bottom: "var(--nav-height)", height: "calc(100dvh - var(--nav-height))" }}>
+      <main className="fixed inset-x-0 flex w-full items-center justify-center bg-black text-zinc-400" style={{ top: "var(--header-height)", bottom: 0, height: "calc(100dvh - var(--header-height))" }}>
         Loading…
       </main>
     );

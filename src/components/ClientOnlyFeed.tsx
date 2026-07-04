@@ -66,8 +66,12 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
   if (!mounted) {
     return (
       <main
-        className="fixed inset-x-0 top-0 min-w-0 w-full bg-black"
-        style={{ bottom: "var(--nav-height)", height: "calc(100dvh - var(--nav-height))" }}
+        className="fixed inset-x-0 min-w-0 w-full bg-black"
+        style={{
+          top: "var(--header-height)",
+          bottom: 0,
+          height: "calc(100dvh - var(--header-height))",
+        }}
         suppressHydrationWarning
       />
     );
@@ -75,8 +79,12 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
 
   return (
     <main
-      className="fixed inset-x-0 top-0 min-w-0 w-full bg-black"
-      style={{ bottom: "var(--nav-height)", height: "calc(100dvh - var(--nav-height))" }}
+      className="fixed inset-x-0 min-w-0 w-full bg-black"
+      style={{
+        top: "var(--header-height)",
+        bottom: 0,
+        height: "calc(100dvh - var(--header-height))",
+      }}
       suppressHydrationWarning
     >
       <VideoFeed

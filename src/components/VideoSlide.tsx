@@ -977,13 +977,6 @@ export function VideoSlide({
         </div>
       ) : (
         <>
-          {/* Subtle watermark logo (non-interactive, below controls) */}
-          <img
-            src="https://res.cloudinary.com/dkbf7tvcx/image/upload/v1783143201/englishfeed/logo/englishfeed-logo.png"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute left-3 top-3 z-[5] h-10 w-auto opacity-[0.25]"
-          />
           <div
             className="absolute inset-0 min-h-0 min-w-0 overflow-hidden"
             onClick={handleVideoClick}
@@ -1034,31 +1027,114 @@ export function VideoSlide({
         </>
       )}
 
-      {/* Fixed above bottom nav (only active slide — avoids stacked duplicate bars) */}
+      {/* Bottom dock: info + play/timeline */}
       {isVisible && !videoError && (
         <div
-          className="pointer-events-auto fixed left-24 right-4 z-40 flex flex-row items-center gap-2 bg-transparent px-2 py-1.5"
-          style={{ bottom: "var(--video-timeline-bottom)" }}
+          className="pointer-events-auto fixed inset-x-0 z-40 flex flex-col"
+          style={{ bottom: "var(--video-dock-bottom)" }}
           onClick={(e) => e.stopPropagation()}
           suppressHydrationWarning
         >
+          {currentWords.length > 0 && (
+            <div className="pointer-events-none px-3 pr-[4.75rem] pb-1 md:px-4 md:pr-4">
+              <div className="pointer-events-auto mx-auto flex h-8 w-full max-w-full items-center rounded-md border border-black/50 bg-black/82 px-2 shadow-[0_2px_10px_rgba(0,0,0,0.55)] backdrop-blur-[2px] md:h-[2.85rem] md:max-w-[24rem] md:px-3">
+                <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 md:text-base md:leading-[1.35rem] lg:text-lg">
+                  {currentWords.map((w, i) => (
+                    <span
+                      key={`${i}-${w.start}`}
+                      role="button"
+                      tabIndex={0}
+                      className={`cursor-pointer rounded-sm px-0.5 transition-colors duration-75 hover:underline ${
+                        i === activeWordIndex ? "text-yellow-300" : "text-white"
+                      }`}
+                      style={{
+                        textShadow:
+                          "0 1px 2px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85)",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const sentence = currentWords.map((x) => x.word).join(" ");
+                        handleWordClick(w.word, sentence);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          const sentence = currentWords.map((x) => x.word).join(" ");
+                          handleWordClick(w.word, sentence);
+                        }
+                      }}
+                    >
+                      {w.word}
+                      {i < currentWords.length - 1 ? " " : ""}
+                    </span>
+                  ))}
+                </p>
+              </div>
+            </div>
+          )}
+          <div className="relative flex min-h-[var(--video-timeline-height)] items-center gap-3 px-3 py-2">
+            {metaPanelOpen && (
+              <div
+                className="pointer-events-auto absolute bottom-full left-2 z-10 mb-1 flex flex-col"
+                suppressHydrationWarning
+              >
+                <div className="w-[280px] max-w-[280px] rounded-md border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 p-3 shadow-[3px_3px_0px_black]">
+                  <h2 className="text-lg font-bold text-white">
+                    <span className="block">{String(lesson.title ?? "")}</span>
+                  </h2>
+                  <p className="mt-1 line-clamp-2 text-sm text-white">
+                    {lesson.description ?? ""}
+                  </p>
+                </div>
+                {lesson.tags && lesson.tags.length > 0 ? (
+                  <div className="mt-2 inline-flex flex-wrap gap-2">
+                    {lesson.tags.map((tag) => (
+                      <Link
+                        key={tag}
+                        href={`/tag/${encodeURIComponent(tag)}`}
+                        className="inline-flex items-center rounded-md border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] transition-colors hover:bg-gray-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        #{tag}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => setMetaPanelOpen((open) => !open)}
+              className="flex shrink-0 items-center gap-1 rounded-t-md border-2 border-b-0 border-black bg-gradient-to-b from-blue-500 to-blue-600 px-2 py-1.5 text-white shadow-[3px_3px_0px_black] transition hover:brightness-110"
+              aria-label={metaPanelOpen ? "Hide lesson info" : "Show lesson info"}
+              aria-expanded={metaPanelOpen}
+            >
+              {metaPanelOpen ? (
+                <ChevronDown className="h-4 w-4 stroke-[2.5]" aria-hidden />
+              ) : (
+                <Info className="h-4 w-4 stroke-[2.5]" aria-hidden />
+              )}
+              <span className="text-xs font-bold">
+                {metaPanelOpen ? "Hide" : "Info"}
+              </span>
+            </button>
           <button
             type="button"
             onClick={handlePlayPause}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-0 bg-transparent text-white shadow-none transition"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white text-blue-600 shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
               <svg
                 viewBox="0 0 24 24"
-                className="h-7 w-7 fill-blue-500"
+                className="h-6 w-6 fill-current"
                 aria-hidden
               >
-                <rect x="6" y="5" width="4.5" height="14" rx="1" />
-                <rect x="13.5" y="5" width="4.5" height="14" rx="1" />
+                <rect x="6" y="5" width="4.5" height="14" rx="0.5" />
+                <rect x="13.5" y="5" width="4.5" height="14" rx="0.5" />
               </svg>
             ) : (
-              <svg viewBox="0 0 24 24" className="h-7 w-7 fill-blue-500" aria-hidden>
+              <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden>
                 <path d="M8 5.5v13l10-6.5z" />
               </svg>
             )}
@@ -1071,7 +1147,7 @@ export function VideoSlide({
             aria-valuemax={Number.isFinite(progressDuration) ? Math.round(progressDuration) : 0}
             aria-label="Video progress"
             tabIndex={0}
-            className="flex min-h-4 min-w-0 flex-1 cursor-pointer items-center bg-transparent py-0.5"
+            className="flex min-h-10 min-w-0 flex-1 cursor-pointer items-center py-1"
             onClick={handleProgressClick}
             onKeyDown={(e) => {
               if (e.key !== "Enter" && e.key !== " ") return;
@@ -1083,62 +1159,17 @@ export function VideoSlide({
               else video.currentTime = Math.max(0, progressCurrent - step);
             }}
           >
-            <div className="relative h-2 w-full">
+            <div className="relative h-4 w-full border-2 border-black bg-white shadow-[2px_2px_0px_black]">
               <div
-                className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-white/30"
-                aria-hidden
-              />
-              <div
-                className="absolute left-0 top-1/2 h-1 max-w-full -translate-y-1/2 rounded-full bg-blue-500 transition-[width] duration-100"
+                className="absolute inset-y-0 left-0 max-w-full border-r-2 border-black bg-blue-500 transition-[width] duration-100"
                 style={{
                   width: progressDuration > 0 ? `${(100 * progressCurrent) / progressDuration}%` : "0%",
                 }}
               />
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Word-level caption overlay — fixed-height bar above controls */}
-      {isVisible && currentWords.length > 0 && (
-        <div
-          className="pointer-events-none fixed z-30 left-3 right-[4.75rem] md:left-1/2 md:right-auto md:w-[min(92vw,24rem)] md:-translate-x-1/2"
-          style={{ bottom: "var(--video-subtitles-bottom)" }}
-          suppressHydrationWarning
-        >
-          <div className="pointer-events-auto flex h-8 items-center rounded-md border border-black/50 bg-black/82 px-2 shadow-[0_2px_10px_rgba(0,0,0,0.55)] backdrop-blur-[2px] md:h-[2.85rem] md:px-3">
-            <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 md:text-base md:leading-[1.35rem] lg:text-lg">
-              {currentWords.map((w, i) => (
-                <span
-                  key={`${i}-${w.start}`}
-                  role="button"
-                  tabIndex={0}
-                  className={`cursor-pointer rounded-sm px-0.5 transition-colors duration-75 hover:underline ${
-                    i === activeWordIndex ? "text-yellow-300" : "text-white"
-                  }`}
-                  style={{
-                    textShadow:
-                      "0 1px 2px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85)",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const sentence = currentWords.map((x) => x.word).join(" ");
-                    handleWordClick(w.word, sentence);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      const sentence = currentWords.map((x) => x.word).join(" ");
-                      handleWordClick(w.word, sentence);
-                    }
-                  }}
-                >
-                  {w.word}
-                  {i < currentWords.length - 1 ? " " : ""}
-                </span>
-              ))}
-            </p>
           </div>
+
         </div>
       )}
 
@@ -1405,61 +1436,6 @@ export function VideoSlide({
         </div>
       )}
 
-      {/* Meta panel: fixed above bottom nav with play/timeline */}
-      {isVisible && (
-      <div
-        className="pointer-events-auto fixed left-4 z-40 flex flex-col items-start"
-        style={{ bottom: "var(--video-controls-bottom)" }}
-        suppressHydrationWarning
-      >
-        {metaPanelOpen && (
-          <div
-            className="pointer-events-auto mb-1 flex flex-col"
-            suppressHydrationWarning
-          >
-            <div className="w-[280px] max-w-[280px] rounded-md border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 p-3 shadow-[3px_3px_0px_black]">
-              <h2 className="text-lg font-bold text-white">
-                <span className="block">{String(lesson.title ?? "")}</span>
-              </h2>
-              <p className="mt-1 line-clamp-2 text-sm text-white">
-                {lesson.description ?? ""}
-              </p>
-            </div>
-            {lesson.tags && lesson.tags.length > 0 ? (
-              <div className="mt-2 inline-flex flex-wrap gap-2">
-                {lesson.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/tag/${encodeURIComponent(tag)}`}
-                    className="inline-flex items-center rounded-md border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] transition-colors hover:bg-gray-100"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        )}
-        <button
-          type="button"
-          onClick={() => setMetaPanelOpen((open) => !open)}
-          className="pointer-events-auto flex items-center gap-1 rounded-t-md border-2 border-b-0 border-black bg-gradient-to-b from-blue-500 to-blue-600 px-2 py-1.5 text-white shadow-[3px_3px_0px_black] transition hover:brightness-110"
-          aria-label={metaPanelOpen ? "Hide lesson info" : "Show lesson info"}
-          aria-expanded={metaPanelOpen}
-        >
-          {metaPanelOpen ? (
-            <ChevronDown className="h-4 w-4 stroke-[2.5]" aria-hidden />
-          ) : (
-            <Info className="h-4 w-4 stroke-[2.5]" aria-hidden />
-          )}
-          <span className="text-xs font-bold">
-            {metaPanelOpen ? "Hide" : "Info"}
-          </span>
-        </button>
-      </div>
-      )}
-
       {/* Vocabulary modal */}
       {selectedWord && (
         <div
@@ -1494,330 +1470,331 @@ export function VideoSlide({
         </div>
       )}
 
+
       {/* Floating vertical action rail */}
       <div
-        className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-3"
+        className="absolute right-3 top-4 z-10 flex flex-col items-center gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
-        {onLevelFilterChange != null && levelFilter != null && (
-          <div className="group relative flex flex-col items-center">
-            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-              Level
-            </span>
-            <button
-              type="button"
-              onClick={() => setLevelPopoverOpen((open) => !open)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-              aria-label="Level filter"
-              aria-expanded={levelPopoverOpen}
-              aria-haspopup="listbox"
-            >
-              <SlidersHorizontal className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            </button>
-            {levelPopoverOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  aria-hidden
-                  onClick={() => setLevelPopoverOpen(false)}
-                />
-                <div
-                  className="absolute right-full top-1/2 z-20 mr-2 min-w-[11rem] -translate-y-1/2 rounded-none border-2 border-black bg-white py-0 shadow-[3px_3px_0px_black]"
-                  role="listbox"
-                  aria-label="Select level"
-                >
-                  {LEVEL_OPTIONS.map(({ value, label }) => (
+                {onLevelFilterChange != null && levelFilter != null && (
+                  <div className="group relative flex flex-col items-center">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                      Level
+                    </span>
                     <button
-                      key={value}
                       type="button"
-                      role="option"
-                      aria-selected={levelFilter === value}
-                      onClick={() => {
-                        onLevelFilterChange(value);
-                        setLevelPopoverOpen(false);
-                      }}
-                      className={`flex w-full items-center gap-2 border-b-2 border-black px-3 py-2 text-left text-sm font-bold transition last:border-b-0 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-[0.99] ${
-                        levelFilter === value
-                          ? "bg-black text-white"
-                          : "bg-white text-black hover:bg-zinc-100"
-                      }`}
+                      onClick={() => setLevelPopoverOpen((open) => !open)}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      aria-label="Level filter"
+                      aria-expanded={levelPopoverOpen}
+                      aria-haspopup="listbox"
                     >
-                      {levelFilter === value ? (
-                        <span className="text-xs" aria-hidden>✓</span>
-                      ) : (
-                        <span className="w-3" />
-                      )}
-                      {label}
+                      <SlidersHorizontal className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
                     </button>
-                  ))}
+                    {levelPopoverOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          aria-hidden
+                          onClick={() => setLevelPopoverOpen(false)}
+                        />
+                        <div
+                          className="absolute right-full top-1/2 z-20 mr-2 min-w-[11rem] -translate-y-1/2 rounded-none border-2 border-black bg-white py-0 shadow-[3px_3px_0px_black]"
+                          role="listbox"
+                          aria-label="Select level"
+                        >
+                          {LEVEL_OPTIONS.map(({ value, label }) => (
+                            <button
+                              key={value}
+                              type="button"
+                              role="option"
+                              aria-selected={levelFilter === value}
+                              onClick={() => {
+                                onLevelFilterChange(value);
+                                setLevelPopoverOpen(false);
+                              }}
+                              className={`flex w-full items-center gap-2 border-b-2 border-black px-3 py-2 text-left text-sm font-bold transition last:border-b-0 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-[0.99] ${
+                                levelFilter === value
+                                  ? "bg-black text-white"
+                                  : "bg-white text-black hover:bg-zinc-100"
+                              }`}
+                            >
+                              {levelFilter === value ? (
+                                <span className="text-xs" aria-hidden>✓</span>
+                              ) : (
+                                <span className="w-3" />
+                              )}
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+                {lesson.subtitlesUrl && (
+                  <div className="group relative flex flex-col items-center">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                      Quiz
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPracticeOpen(true)}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      aria-label="Quiz"
+                    >
+                      <ClipboardList className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    </button>
+                  </div>
+                )}
+                {lesson.subtitlesUrl && (
+                  <div className="group relative flex flex-col items-center">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                      Speak
+                    </span>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        // Open immediately so the UI feels responsive, even while loading.
+                        videoRef.current?.pause();
+                        setPronunciationOpen(true);
+                        setPracticeSentence("");
+        
+                        const fallbackPool = Array.isArray(lesson.practiceSentences)
+                          ? lesson.practiceSentences
+                          : [];
+                        const fallbackSentence =
+                          fallbackPool.length > 0
+                            ? fallbackPool[0] ?? ""
+                            : (lesson.title?.trim() || "");
+                        try {
+                          const res = await fetch(
+                            `/api/lesson-pronunciation?lessonId=${encodeURIComponent(lesson.id)}`
+                          );
+                          const data = (await res.json()) as {
+                            sentence?: string;
+                            error?: string;
+                          };
+                          const sentence =
+                            typeof data.sentence === "string" ? data.sentence.trim() : "";
+                          const chosen = res.ok && sentence ? sentence : fallbackSentence;
+                          if (!chosen) return;
+                          setPracticeSentence(chosen);
+                          setPronunciationOpen(true);
+                        } catch {
+                          const chosen = fallbackSentence;
+                          if (!chosen) return;
+                          setPracticeSentence(chosen);
+                          setPronunciationOpen(true);
+                        }
+                      }}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      aria-label="Practice pronunciation"
+                    >
+                      <Mic className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    </button>
+                  </div>
+                )}
+                {lesson.subtitlesUrl && (
+                  <div className="group relative flex flex-col items-center">
+                    <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                      Vocabulary
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        videoRef.current?.pause();
+                        setVocabularyOpen(true);
+                        setVocabularyLoading(true);
+                        setVocabularyError(null);
+                        setVocabularyData([]);
+                        fetch(
+                          `/api/lesson-vocabulary?lessonId=${encodeURIComponent(lesson.id)}`
+                        )
+                          .then(async (res) => {
+                            const data = (await res.json()) as {
+                              vocabulary?: unknown;
+                              error?: string;
+                            };
+                            if (!res.ok) {
+                              throw new Error(data.error ?? "Failed to load vocabulary");
+                            }
+                            const list = Array.isArray(data.vocabulary)
+                              ? data.vocabulary
+                              : [];
+                            setVocabularyData(list as VocabularyCardItem[]);
+                          })
+                          .catch((e) => {
+                            setVocabularyError(
+                              e instanceof Error ? e.message : "Failed to load vocabulary"
+                            );
+                          })
+                          .finally(() => {
+                            setVocabularyLoading(false);
+                          });
+                      }}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      aria-label="Vocabulary"
+                    >
+                      <BookOpen className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    </button>
+                  </div>
+                )}
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    Camera vocab
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      videoRef.current?.pause();
+                      setCameraExerciseOpen(true);
+                    }}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label="Camera vocabulary exercise"
+                  >
+                    <Camera className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                  </button>
                 </div>
-              </>
-            )}
-          </div>
-        )}
-        {lesson.subtitlesUrl && (
-          <div className="group relative flex flex-col items-center">
-            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-              Quiz
-            </span>
-            <button
-              type="button"
-              onClick={() => setPracticeOpen(true)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-              aria-label="Quiz"
-            >
-              <ClipboardList className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            </button>
-          </div>
-        )}
-        {lesson.subtitlesUrl && (
-          <div className="group relative flex flex-col items-center">
-            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-              Speak
-            </span>
-            <button
-              type="button"
-              onClick={async () => {
-                // Open immediately so the UI feels responsive, even while loading.
-                videoRef.current?.pause();
-                setPronunciationOpen(true);
-                setPracticeSentence("");
-
-                const fallbackPool = Array.isArray(lesson.practiceSentences)
-                  ? lesson.practiceSentences
-                  : [];
-                const fallbackSentence =
-                  fallbackPool.length > 0
-                    ? fallbackPool[0] ?? ""
-                    : (lesson.title?.trim() || "");
-                try {
-                  const res = await fetch(
-                    `/api/lesson-pronunciation?lessonId=${encodeURIComponent(lesson.id)}`
-                  );
-                  const data = (await res.json()) as {
-                    sentence?: string;
-                    error?: string;
-                  };
-                  const sentence =
-                    typeof data.sentence === "string" ? data.sentence.trim() : "";
-                  const chosen = res.ok && sentence ? sentence : fallbackSentence;
-                  if (!chosen) return;
-                  setPracticeSentence(chosen);
-                  setPronunciationOpen(true);
-                } catch {
-                  const chosen = fallbackSentence;
-                  if (!chosen) return;
-                  setPracticeSentence(chosen);
-                  setPronunciationOpen(true);
-                }
-              }}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-              aria-label="Practice pronunciation"
-            >
-              <Mic className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            </button>
-          </div>
-        )}
-        {lesson.subtitlesUrl && (
-          <div className="group relative flex flex-col items-center">
-            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-              Vocabulary
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                videoRef.current?.pause();
-                setVocabularyOpen(true);
-                setVocabularyLoading(true);
-                setVocabularyError(null);
-                setVocabularyData([]);
-                fetch(
-                  `/api/lesson-vocabulary?lessonId=${encodeURIComponent(lesson.id)}`
-                )
-                  .then(async (res) => {
-                    const data = (await res.json()) as {
-                      vocabulary?: unknown;
-                      error?: string;
-                    };
-                    if (!res.ok) {
-                      throw new Error(data.error ?? "Failed to load vocabulary");
-                    }
-                    const list = Array.isArray(data.vocabulary)
-                      ? data.vocabulary
-                      : [];
-                    setVocabularyData(list as VocabularyCardItem[]);
-                  })
-                  .catch((e) => {
-                    setVocabularyError(
-                      e instanceof Error ? e.message : "Failed to load vocabulary"
-                    );
-                  })
-                  .finally(() => {
-                    setVocabularyLoading(false);
-                  });
-              }}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-              aria-label="Vocabulary"
-            >
-              <BookOpen className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            </button>
-          </div>
-        )}
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            Camera vocab
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              videoRef.current?.pause();
-              setCameraExerciseOpen(true);
-            }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label="Camera vocabulary exercise"
-          >
-            <Camera className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-          </button>
-        </div>
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            AI Tutor
-          </span>
-          <button
-            type="button"
-            onClick={openTutorModal}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label="AI Tutor"
-          >
-            <Bot className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-          </button>
-        </div>
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            Like
-          </span>
-          <button
-            type="button"
-            onClick={async () => {
-              const next = !isLiked;
-              setIsLiked(next);
-              if (!userId) {
-                return;
-              }
-              try {
-                if (next) {
-                  await fetch("/api/likes", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ userId, lessonId: lesson.id }),
-                  });
-                  addLikedLesson({
-                    id: lesson.id,
-                    title: lesson.title,
-                    videoUrl: lesson.videoUrl,
-                    thumbnailUrl: lesson.thumbnailUrl,
-                  });
-                  trackEvent("like", lesson.id, {}, userId ?? null);
-                } else {
-                  await fetch(
-                    `/api/likes?userId=${encodeURIComponent(
-                      userId
-                    )}&lessonId=${encodeURIComponent(lesson.id)}`,
-                    { method: "DELETE" }
-                  );
-                  removeLikedLesson(lesson.id);
-                }
-              } catch {
-                // ignore network errors; UI state already updated optimistically
-              }
-            }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-red-500 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label={isLiked ? "Unlike" : "Like"}
-          >
-            <Heart
-              className={`h-[22px] w-[22px] stroke-[2.5] ${isLiked ? "fill-white text-white" : ""}`}
-              aria-hidden
-            />
-          </button>
-        </div>
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            Save
-          </span>
-          <button
-            type="button"
-            onClick={async () => {
-              const next = !isSaved;
-              setIsSaved(next);
-              if (!userId) {
-                return;
-              }
-              try {
-                if (next) {
-                  await fetch("/api/saves", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ userId, lessonId: lesson.id }),
-                  });
-                  addSavedLesson({
-                    id: lesson.id,
-                    title: lesson.title,
-                    videoUrl: lesson.videoUrl,
-                    thumbnailUrl: lesson.thumbnailUrl,
-                  });
-                  trackEvent("save", lesson.id, {}, userId ?? null);
-                } else {
-                  await fetch(
-                    `/api/saves?userId=${encodeURIComponent(
-                      userId
-                    )}&lessonId=${encodeURIComponent(lesson.id)}`,
-                    { method: "DELETE" }
-                  );
-                  removeSavedLesson(lesson.id);
-                }
-              } catch {
-                // ignore network errors; UI state already updated optimistically
-              }
-            }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label={isSaved ? "Unsave" : "Save"}
-          >
-            <Bookmark
-              className={`h-[22px] w-[22px] stroke-[2.5] ${isSaved ? "fill-black text-black" : ""}`}
-              aria-hidden
-            />
-          </button>
-        </div>
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            Listen
-          </span>
-          <button
-            type="button"
-            onClick={handleSoundClick}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label={isMuted ? "Unmute" : "Mute"}
-          >
-            {isMuted ? (
-              <VolumeX className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            ) : (
-              <Volume2 className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-            )}
-          </button>
-        </div>
-        <div className="group relative flex flex-col items-center">
-          <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-            Comment
-          </span>
-          <Link
-            href="/inbox"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
-            aria-label="Comment"
-          >
-            <MessageCircle className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
-          </Link>
-        </div>
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    AI Tutor
+                  </span>
+                  <button
+                    type="button"
+                    onClick={openTutorModal}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label="AI Tutor"
+                  >
+                    <Bot className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                  </button>
+                </div>
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    Like
+                  </span>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const next = !isLiked;
+                      setIsLiked(next);
+                      if (!userId) {
+                        return;
+                      }
+                      try {
+                        if (next) {
+                          await fetch("/api/likes", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId, lessonId: lesson.id }),
+                          });
+                          addLikedLesson({
+                            id: lesson.id,
+                            title: lesson.title,
+                            videoUrl: lesson.videoUrl,
+                            thumbnailUrl: lesson.thumbnailUrl,
+                          });
+                          trackEvent("like", lesson.id, {}, userId ?? null);
+                        } else {
+                          await fetch(
+                            `/api/likes?userId=${encodeURIComponent(
+                              userId
+                            )}&lessonId=${encodeURIComponent(lesson.id)}`,
+                            { method: "DELETE" }
+                          );
+                          removeLikedLesson(lesson.id);
+                        }
+                      } catch {
+                        // ignore network errors; UI state already updated optimistically
+                      }
+                    }}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-red-500 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label={isLiked ? "Unlike" : "Like"}
+                  >
+                    <Heart
+                      className={`h-[22px] w-[22px] stroke-[2.5] ${isLiked ? "fill-white text-white" : ""}`}
+                      aria-hidden
+                    />
+                  </button>
+                </div>
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    Save
+                  </span>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const next = !isSaved;
+                      setIsSaved(next);
+                      if (!userId) {
+                        return;
+                      }
+                      try {
+                        if (next) {
+                          await fetch("/api/saves", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId, lessonId: lesson.id }),
+                          });
+                          addSavedLesson({
+                            id: lesson.id,
+                            title: lesson.title,
+                            videoUrl: lesson.videoUrl,
+                            thumbnailUrl: lesson.thumbnailUrl,
+                          });
+                          trackEvent("save", lesson.id, {}, userId ?? null);
+                        } else {
+                          await fetch(
+                            `/api/saves?userId=${encodeURIComponent(
+                              userId
+                            )}&lessonId=${encodeURIComponent(lesson.id)}`,
+                            { method: "DELETE" }
+                          );
+                          removeSavedLesson(lesson.id);
+                        }
+                      } catch {
+                        // ignore network errors; UI state already updated optimistically
+                      }
+                    }}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label={isSaved ? "Unsave" : "Save"}
+                  >
+                    <Bookmark
+                      className={`h-[22px] w-[22px] stroke-[2.5] ${isSaved ? "fill-black text-black" : ""}`}
+                      aria-hidden
+                    />
+                  </button>
+                </div>
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    Listen
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleSoundClick}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label={isMuted ? "Unmute" : "Mute"}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    ) : (
+                      <Volume2 className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    )}
+                  </button>
+                </div>
+                <div className="group relative flex flex-col items-center">
+                  <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded border-2 border-black bg-white px-2 py-1 text-xs font-bold text-black shadow-[3px_3px_0px_black] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+                    Comment
+                  </span>
+                  <Link
+                    href="/inbox"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-black bg-white text-black shadow-[3px_3px_0px_black] transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    aria-label="Comment"
+                  >
+                    <MessageCircle className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                  </Link>
+                </div>
       </div>
 
       {practiceOpen && (

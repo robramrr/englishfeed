@@ -3,16 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  /* Content row height inside BottomNav (see BottomNav.tsx h-16) */
-  --nav-height: 4rem;
-  /* Total fixed space from bottom: nav bar + home-indicator (matches BottomNav outer height) */
-  --nav-stack-height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
-  /* Info tab — bottom edge flush with top of BottomNav */
-  --video-controls-bottom: var(--nav-stack-height);
-  /* Play/timeline only: a couple px lower than Info for visual balance */
-  --video-timeline-bottom: calc(var(--nav-stack-height) - 7px);
-  /* Word subtitles: offset above the control row */
-  --video-subtitles-bottom: calc(var(--nav-stack-height) + 3.25rem);
+  /* Fixed app header (logo bar) */
+  --header-height: 3.5rem;
+  /* Bottom chrome removed; keep safe-area padding for controls */
+  --nav-height: 0px;
+  --nav-stack-height: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+  --video-timeline-height: 3.5rem;
+  --video-dock-bottom: var(--nav-stack-height);
 }
 
 @theme inline {

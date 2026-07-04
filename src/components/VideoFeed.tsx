@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { EnglishLevel, Lesson } from "@/types/lesson";
+import { FEED_SCROLL_TO_START_EVENT } from "@/lib/feedNavigation";
 import { VideoSlide } from "./VideoSlide";
 
 interface VideoFeedProps {
@@ -169,6 +170,18 @@ export function VideoFeed({
     };
   }, [levelFilter, userId]);
 
+  useEffect(() => {
+    const scrollToStart = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      el.scrollTo({ top: 0, behavior: "smooth" });
+      setCurrentIndex(0);
+    };
+    window.addEventListener(FEED_SCROLL_TO_START_EVENT, scrollToStart);
+    return () =>
+      window.removeEventListener(FEED_SCROLL_TO_START_EVENT, scrollToStart);
+  }, []);
+
   // Load next batch when scroll near end
   const loadMore = useCallback(() => {
     if (nextCursor == null || loadingMoreRef.current || isLoading) return;
@@ -248,7 +261,7 @@ export function VideoFeed({
 
   /** Must match the feed viewport (ClientOnlyFeed main). `h-screen` / 100vh ≠ that area on mobile, so snaps desync: two slides partly visible and the prior slide’s absolute Info/meta can sit over the next video. */
   const slideFrameClass =
-    "h-[calc(100dvh-var(--nav-height))] min-h-[calc(100dvh-var(--nav-height))] w-full min-w-0 shrink-0 snap-start snap-always overflow-hidden";
+    "h-[calc(100dvh-var(--header-height))] min-h-[calc(100dvh-var(--header-height))] w-full min-w-0 shrink-0 snap-start snap-always overflow-hidden";
 
   return (
     <div
