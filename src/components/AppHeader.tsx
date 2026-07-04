@@ -43,11 +43,14 @@ export function AppHeader() {
     togglePicker();
   };
 
+  const headerBtnClass =
+    "flex h-10 w-10 items-center justify-center text-brand-navy transition hover:opacity-80";
+
   return (
     <header className="comic-bg-header-stripes comic-border-b-4 comic-shadow-xl fixed inset-x-0 top-0 z-50 flex h-[var(--header-height)] items-center justify-between px-3">
       <Link
         href="/profile"
-        className="comic-icon-btn h-10 w-10 rounded-full"
+        className={headerBtnClass}
         aria-label="Profile"
       >
         <User className="h-5 w-5" strokeWidth={2.25} />
@@ -69,8 +72,8 @@ export function AppHeader() {
       <button
         type="button"
         onClick={handleFeedLevelClick}
-        className={`comic-icon-btn h-10 w-10 rounded-full ${
-          pickerOpen ? "comic-bg-primary text-white" : ""
+        className={`flex h-10 w-10 items-center justify-center transition hover:opacity-90 ${
+          pickerOpen ? "comic-bg-primary text-white" : "text-brand-navy hover:opacity-80"
         }`}
         aria-label="Feed level"
         aria-expanded={pickerOpen}
