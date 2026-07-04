@@ -125,39 +125,21 @@ export function VideoFeed({
     setContainerReady(!!el);
   }, []);
 
-  // Load first batch when level is set; reset and refetch when level changes
+  // Load lessons when level changes; keep prior slides visible during refetch.
   useEffect(() => {
     let cancelled = false;
-    setLessons([]);
-    setNextCursor(0);
     setIsLoading(true);
     loadingMoreRef.current = false;
 
-    // Try engagement-ranked ordering first; fall back to the existing
-    // lessons API ordering if anything fails so the feed always loads.
-    fetchRankedLessons(levelFilter, userId)
-      .then((ranked) => {
+    fetchLessons(levelFilter, 0)
+      .then(({ lessons: batch, nextCursor: next }) => {
         if (!cancelled) {
-          setLessons(ranked);
-          // All lessons are already loaded; disable pagination.
-          setNextCursor(null);
+          setLessons(batch);
+          setNextCursor(next);
         }
       })
       .catch(() => {
-        if (cancelled) return;
-        fetchLessons(levelFilter, 0)
-          .then(({ lessons: batch, nextCursor: next }) => {
-            if (!cancelled) {
-              setLessons(batch);
-              setNextCursor(next);
-            }
-          })
-          .catch(() => {
-            if (!cancelled) setNextCursor(null);
-          })
-          .finally(() => {
-            if (!cancelled) setIsLoading(false);
-          });
+        if (!cancelled) setNextCursor(null);
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
@@ -241,18 +223,18 @@ export function VideoFeed({
     });
   }, [initialVideoId, containerReady, lessons]);
 
-  if (!isLoading && lessons.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center text-zinc-500">
-        No lessons yet. Check back soon!
-      </div>
-    );
-  }
-
   if (isLoading && lessons.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-zinc-500">
         Loading…
+      </div>
+    );
+  }
+
+  if (!isLoading && lessons.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center text-zinc-500">
+        No lessons yet. Check back soon!
       </div>
     );
   }

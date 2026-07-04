@@ -45,7 +45,7 @@ export default function RootLayout({
               className="flex min-h-screen flex-col"
               suppressHydrationWarning
             >
-              <main className="min-h-[calc(100dvh-var(--header-height))] min-w-0 overflow-y-auto">
+              <main className="min-h-[calc(100dvh-var(--header-height))] min-w-0 overflow-hidden bg-black">
                 {children}
               </main>
             </div>

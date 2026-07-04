@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { EnglishLevel } from "@/types/lesson";
 import { LevelPickerOverlay } from "@/components/LevelPickerOverlay";
@@ -11,21 +10,37 @@ interface ClientOnlyFeedProps {
   userId: string;
 }
 
+function readFeedSearchParams() {
+  if (typeof window === "undefined") {
+    return { videoId: undefined as string | undefined, seekTime: undefined as number | undefined };
+  }
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get("video") ?? undefined;
+  const tParam = params.get("t");
+  const seekTime =
+    tParam != null && tParam !== "" ? Number.parseFloat(tParam) : undefined;
+  return {
+    videoId,
+    seekTime: Number.isFinite(seekTime) ? seekTime : undefined,
+  };
+}
+
+const feedShellStyle = {
+  top: "var(--header-height)",
+  bottom: 0,
+  height: "calc(100dvh - var(--header-height))",
+} as const;
+
 /**
- * Renders the feed only after client mount to avoid hydration mismatch
- * when browser extensions inject attributes (e.g. bis_skin_checked) into the DOM.
- * Lesson loading is handled by VideoFeed via /api/lessons.
- * User level is loaded from and saved to Supabase user_settings.
+ * User level is loaded from Supabase before the feed mounts so lessons are
+ * only fetched once (avoids empty refetch flicker when settings arrive).
  */
 export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
-  const [mounted, setMounted] = useState(false);
   const { levelFilter, setLevelFilter } = useLevelFilter();
-  const searchParams = useSearchParams();
-  useEffect(() => setMounted(true), []);
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [{ videoId, seekTime }] = useState(readFeedSearchParams);
 
-  // Load saved level from user_settings
   useEffect(() => {
-    if (!userId) return;
     let cancelled = false;
     fetch(`/api/user-settings?userId=${encodeURIComponent(userId)}`)
       .then((res) => (res.ok ? res.json() : null))
@@ -37,7 +52,10 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
           }
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setSettingsReady(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -51,40 +69,10 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, level }),
-      }).catch(() => {
-        // ignore
-      });
+      }).catch(() => {});
     },
     [userId, setLevelFilter]
   );
-
-  const videoId = searchParams.get("video") ?? undefined;
-  const tParam = searchParams.get("t");
-  const seekTime =
-    tParam != null && tParam !== ""
-      ? Number.parseFloat(tParam)
-      : undefined;
-
-  const feedShellStyle = {
-    top: "var(--header-height)",
-    bottom: 0,
-    height: "calc(100dvh - var(--header-height))",
-  } as const;
-
-  if (!mounted) {
-    return (
-      <div
-        className="fixed inset-x-0 bg-black"
-        style={feedShellStyle}
-        suppressHydrationWarning
-      >
-        <main
-          className="mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
-          suppressHydrationWarning
-        />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -96,14 +84,34 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
         className="relative mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
         suppressHydrationWarning
       >
-        <VideoFeed
-          initialVideoId={videoId}
-          initialSeekTime={Number.isFinite(seekTime) ? seekTime : undefined}
-          levelFilter={levelFilter}
-          userId={userId}
-        />
-        <LevelPickerOverlay onSelect={handleLevelChange} />
+        {settingsReady ? (
+          <>
+            <VideoFeed
+              initialVideoId={videoId}
+              initialSeekTime={seekTime}
+              levelFilter={levelFilter}
+              userId={userId}
+            />
+            <LevelPickerOverlay onSelect={handleLevelChange} />
+          </>
+        ) : null}
       </main>
+    </div>
+  );
+}
+
+/** Black feed-area placeholder matching ClientOnlyFeed layout (auth bootstrap). */
+export function FeedShellPlaceholder() {
+  return (
+    <div
+      className="fixed inset-x-0 bg-black"
+      style={feedShellStyle}
+      suppressHydrationWarning
+    >
+      <main
+        className="relative mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
+        suppressHydrationWarning
+      />
     </div>
   );
 }

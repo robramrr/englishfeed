@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ClientOnlyFeed } from "@/components/ClientOnlyFeed";
+import {
+  ClientOnlyFeed,
+  FeedShellPlaceholder,
+} from "@/components/ClientOnlyFeed";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function Home() {
@@ -15,19 +18,13 @@ export default function Home() {
     }
   }, [loading, user, router]);
 
-  if (loading) {
-    return (
-      <main className="fixed inset-x-0 flex w-full items-center justify-center bg-black text-zinc-400" style={{ top: "var(--header-height)", bottom: 0, height: "calc(100dvh - var(--header-height))" }}>
-        Loading…
-      </main>
-    );
+  if (!loading && !user) {
+    return null;
   }
 
-  if (!user) {
-    // Redirecting to /auth
-    return null;
+  if (loading || !user) {
+    return <FeedShellPlaceholder />;
   }
 
   return <ClientOnlyFeed userId={user.id} />;
 }
-
