@@ -965,7 +965,7 @@ export function VideoSlide({
   return (
     <div
       ref={slideRef}
-      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-hidden bg-black"
+      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-visible bg-black md:overflow-hidden"
       suppressHydrationWarning
     >
       {videoError ? (
@@ -1475,9 +1475,10 @@ export function VideoSlide({
       )}
 
 
-      {/* Floating vertical action rail */}
+      {/* Floating vertical action rail — mobile: fixed in right gutter; desktop: inside video */}
+      {showChrome && !videoError && (
       <div
-        className="absolute right-3 top-4 z-10 flex flex-col items-center gap-3 md:top-1/2 md:-translate-y-1/2 md:justify-center"
+        className="fixed right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(var(--header-height)+1rem)] z-20 flex flex-col items-center gap-2 md:absolute md:right-3 md:left-auto md:top-1/2 md:-translate-y-1/2 md:gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
@@ -1679,6 +1680,7 @@ export function VideoSlide({
                   </Link>
                 </div>
       </div>
+      )}
 
       {practiceOpen && (
         <PracticeQuiz

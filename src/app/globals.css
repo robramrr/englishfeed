@@ -45,8 +45,18 @@
   --video-dock-bottom: var(--nav-stack-height);
   --viewport-height: 100vh;
   --feed-viewport-height: calc(var(--viewport-height) - var(--header-height));
+  --feed-action-rail-gap: 4rem;
   --feed-max-width: min(100%, calc((var(--viewport-height) - var(--header-height)) * 9 / 16));
   --comic-container-max: 72rem;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --feed-max-width: min(
+      calc(100vw - var(--feed-action-rail-gap)),
+      calc((var(--viewport-height) - var(--header-height)) * 9 / 16)
+    );
+  }
 }
 
 @supports (height: 100dvh) {
