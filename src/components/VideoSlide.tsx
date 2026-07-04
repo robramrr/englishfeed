@@ -290,6 +290,12 @@ const commonWordFallbacks: Record<
   },
 };
 
+const actionRailBtnBase =
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full comic-border comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95 md:h-11 md:w-11";
+const actionRailBtnPrimary = `${actionRailBtnBase} comic-bg-primary text-white`;
+const actionRailBtnSecondary = `${actionRailBtnBase} bg-white text-brand-navy`;
+const actionRailIconClass = "h-5 w-5 stroke-[2.5] md:h-[22px] md:w-[22px]";
+
 export function VideoSlide({
   lesson,
   scrollContainerRef,
@@ -1506,10 +1512,10 @@ export function VideoSlide({
                     <button
                       type="button"
                       onClick={() => setPracticeOpen(true)}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className={actionRailBtnPrimary}
                       aria-label="Quiz"
                     >
-                      <ClipboardList className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                      <ClipboardList className={actionRailIconClass} aria-hidden />
                     </button>
                   </div>
                 )}
@@ -1554,10 +1560,10 @@ export function VideoSlide({
                           setPronunciationOpen(true);
                         }
                       }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className={actionRailBtnPrimary}
                       aria-label="Practice pronunciation"
                     >
-                      <Mic className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                      <Mic className={actionRailIconClass} aria-hidden />
                     </button>
                   </div>
                 )}
@@ -1599,10 +1605,10 @@ export function VideoSlide({
                             setVocabularyLoading(false);
                           });
                       }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                      className={actionRailBtnPrimary}
                       aria-label="Vocabulary"
                     >
-                      <BookOpen className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                      <BookOpen className={actionRailIconClass} aria-hidden />
                     </button>
                   </div>
                 )}
@@ -1616,10 +1622,10 @@ export function VideoSlide({
                       videoRef.current?.pause();
                       setCameraExerciseOpen(true);
                     }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className={actionRailBtnPrimary}
                     aria-label="Camera vocabulary exercise"
                   >
-                    <Camera className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    <Camera className={actionRailIconClass} aria-hidden />
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
@@ -1629,10 +1635,10 @@ export function VideoSlide({
                   <button
                     type="button"
                     onClick={openTutorModal}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className={actionRailBtnPrimary}
                     aria-label="AI Tutor"
                   >
-                    <Bot className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    <Bot className={actionRailIconClass} aria-hidden />
                   </button>
                 </div>
                 <div className="group relative flex flex-col items-center">
@@ -1674,11 +1680,11 @@ export function VideoSlide({
                         // ignore network errors; UI state already updated optimistically
                       }
                     }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border comic-bg-primary text-white comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className={actionRailBtnPrimary}
                     aria-label={isLiked ? "Unlike" : "Like"}
                   >
                     <Heart
-                      className={`h-[22px] w-[22px] stroke-[2.5] ${isLiked ? "fill-white text-white" : ""}`}
+                      className={`${actionRailIconClass} ${isLiked ? "fill-white text-white" : ""}`}
                       aria-hidden
                     />
                   </button>
@@ -1689,10 +1695,10 @@ export function VideoSlide({
                   </span>
                   <Link
                     href="/inbox"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95"
+                    className={actionRailBtnSecondary}
                     aria-label="Comment"
                   >
-                    <MessageCircle className="h-[22px] w-[22px] stroke-[2.5]" aria-hidden />
+                    <MessageCircle className={actionRailIconClass} aria-hidden />
                   </Link>
                 </div>
       </div>
