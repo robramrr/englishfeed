@@ -43,8 +43,6 @@ import {
   BookOpen,
   Bot,
   Camera,
-  ChevronDown,
-  ChevronUp,
   ClipboardList,
   Heart,
   Info,
@@ -1105,18 +1103,11 @@ export function VideoSlide({
             <button
               type="button"
               onClick={() => setMetaPanelOpen((open) => !open)}
-              className="flex shrink-0 items-center gap-1 rounded-t-md border-2 border-b-0 border-black bg-gradient-to-b from-blue-500 to-blue-600 px-2 py-1.5 text-white shadow-[3px_3px_0px_black] transition hover:brightness-110"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[3px_3px_0px_black] transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
               aria-label={metaPanelOpen ? "Hide lesson info" : "Show lesson info"}
               aria-expanded={metaPanelOpen}
             >
-              {metaPanelOpen ? (
-                <ChevronDown className="h-4 w-4 stroke-[2.5]" aria-hidden />
-              ) : (
-                <Info className="h-4 w-4 stroke-[2.5]" aria-hidden />
-              )}
-              <span className="text-xs font-bold">
-                {metaPanelOpen ? "Hide" : "Info"}
-              </span>
+              <Info className="h-6 w-6 stroke-[2.25]" aria-hidden />
             </button>
           <button
             type="button"
