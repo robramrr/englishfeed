@@ -65,37 +65,45 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
       ? Number.parseFloat(tParam)
       : undefined;
 
+  const feedShellStyle = {
+    top: "var(--header-height)",
+    bottom: 0,
+    height: "calc(100dvh - var(--header-height))",
+  } as const;
+
   if (!mounted) {
     return (
-      <main
-        className="fixed inset-x-0 min-w-0 w-full bg-black"
-        style={{
-          top: "var(--header-height)",
-          bottom: 0,
-          height: "calc(100dvh - var(--header-height))",
-        }}
+      <div
+        className="fixed inset-x-0 bg-black"
+        style={feedShellStyle}
         suppressHydrationWarning
-      />
+      >
+        <main
+          className="mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
+          suppressHydrationWarning
+        />
+      </div>
     );
   }
 
   return (
-    <main
-      className="fixed inset-x-0 min-w-0 w-full bg-black"
-      style={{
-        top: "var(--header-height)",
-        bottom: 0,
-        height: "calc(100dvh - var(--header-height))",
-      }}
+    <div
+      className="fixed inset-x-0 bg-black"
+      style={feedShellStyle}
       suppressHydrationWarning
     >
-      <VideoFeed
-        initialVideoId={videoId}
-        initialSeekTime={Number.isFinite(seekTime) ? seekTime : undefined}
-        levelFilter={levelFilter}
-        userId={userId}
-      />
-      <LevelPickerOverlay onSelect={handleLevelChange} />
-    </main>
+      <main
+        className="relative mx-auto h-full min-w-0 w-full max-w-[var(--feed-max-width)] bg-black"
+        suppressHydrationWarning
+      >
+        <VideoFeed
+          initialVideoId={videoId}
+          initialSeekTime={Number.isFinite(seekTime) ? seekTime : undefined}
+          levelFilter={levelFilter}
+          userId={userId}
+        />
+        <LevelPickerOverlay onSelect={handleLevelChange} />
+      </main>
+    </div>
   );
 }

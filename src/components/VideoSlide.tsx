@@ -931,7 +931,7 @@ export function VideoSlide({
   return (
     <div
       ref={slideRef}
-      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-hidden bg-zinc-900"
+      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-hidden bg-black"
       suppressHydrationWarning
     >
       {videoError ? (
@@ -961,30 +961,21 @@ export function VideoSlide({
             onClick={handleVideoClick}
             role="presentation"
           >
-            <div className="flex h-full min-h-0 w-full min-w-0 flex-row">
-              <div
-                className="hidden min-h-0 min-w-0 flex-1 bg-gradient-to-b from-blue-500 to-blue-600 md:block"
-                aria-hidden
-              />
-              <div className="relative flex h-full shrink-0 items-center justify-start md:justify-center">
-                <video
-                  key={lesson.id}
-                  ref={videoRef}
-                  src={lesson.videoUrl}
-                  className="block h-full w-auto max-w-full object-contain"
-                  playsInline
-                  muted
-                  loop
-                  preload="metadata"
-                  onError={() => setVideoError(true)}
-                  onEnded={() => {
-                    trackEvent("video_complete", lesson.id, {}, userId ?? null);
-                    trackEvent("replay", lesson.id, {}, userId ?? null);
-                  }}
-                />
-              </div>
-              <div className="min-h-0 min-w-0 flex-1 bg-red-500" aria-hidden />
-            </div>
+            <video
+              key={lesson.id}
+              ref={videoRef}
+              src={lesson.videoUrl}
+              className="block h-full w-full object-cover"
+              playsInline
+              muted
+              loop
+              preload="metadata"
+              onError={() => setVideoError(true)}
+              onEnded={() => {
+                trackEvent("video_complete", lesson.id, {}, userId ?? null);
+                trackEvent("replay", lesson.id, {}, userId ?? null);
+              }}
+            />
             {cameraExerciseOpen && cameraVocab.showFeedLayer && (
               <CameraVocabFeedOverlay
                 selfieVideoRef={cameraVocab.selfieVideoRef}
@@ -1009,14 +1000,14 @@ export function VideoSlide({
       {/* Bottom dock: info + play/timeline */}
       {isVisible && !videoError && (
         <div
-          className="pointer-events-auto fixed inset-x-0 z-40 flex flex-col"
-          style={{ bottom: "var(--video-dock-bottom)" }}
+          className="pointer-events-auto absolute inset-x-0 bottom-0 z-40 flex flex-col"
+          style={{ paddingBottom: "var(--video-dock-bottom)" }}
           onClick={(e) => e.stopPropagation()}
           suppressHydrationWarning
         >
           {currentWords.length > 0 && (
-            <div className="pointer-events-none px-3 pr-[4.75rem] pb-1 md:px-4 md:pr-4">
-              <div className="pointer-events-auto mx-auto flex h-8 w-full max-w-full items-center rounded-none border-2 border-black bg-white px-2 shadow-[3px_3px_0px_black] md:h-[2.85rem] md:max-w-[24rem] md:px-3">
+            <div className="pointer-events-none flex justify-center px-3 pb-1 md:px-4">
+              <div className="pointer-events-auto flex h-8 w-full max-w-[min(100%,24rem)] items-center justify-center rounded-none border-2 border-black bg-white px-2 shadow-[3px_3px_0px_black] md:h-[2.85rem] md:px-3">
                 <p className="line-clamp-2 w-full overflow-hidden break-words text-center text-xs font-semibold leading-4 text-black md:text-base md:leading-[1.35rem] lg:text-lg">
                   {currentWords.map((w, i) => (
                     <span
