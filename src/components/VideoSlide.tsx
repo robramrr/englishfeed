@@ -291,10 +291,10 @@ const commonWordFallbacks: Record<
 };
 
 const actionRailBtnBase =
-  "flex h-9 w-9 md:h-11 md:w-11 shrink-0 items-center justify-center rounded-full comic-border comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95";
+  "flex h-8 w-8 md:h-11 md:w-11 shrink-0 items-center justify-center rounded-full comic-border comic-shadow-sm transition hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:scale-95";
 const actionRailBtnPrimary = `${actionRailBtnBase} comic-bg-primary text-white`;
 const actionRailBtnSecondary = `${actionRailBtnBase} bg-white text-brand-navy`;
-const actionRailIconClass = "h-[18px] w-[18px] md:h-[22px] md:w-[22px] stroke-[2.5]";
+const actionRailIconClass = "h-4 w-4 md:h-[22px] md:w-[22px] stroke-[2.5]";
 const actionRailTooltipClass =
   "pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded comic-border bg-white px-2 py-1 text-xs font-bold text-brand-navy comic-shadow-sm opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100";
 
@@ -1486,7 +1486,7 @@ export function VideoSlide({
       {/* Floating vertical action rail — inside video, vertically centered on the right */}
       {showChrome && !videoError && (
       <div
-        className="absolute right-2 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-2 md:right-3 md:gap-3"
+        className="absolute right-1.5 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-1.5 md:right-3 md:gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
