@@ -973,7 +973,7 @@ export function VideoSlide({
   return (
     <div
       ref={slideRef}
-      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-visible bg-black md:overflow-hidden"
+      className="relative h-full min-h-0 w-full min-w-0 flex-shrink-0 overflow-hidden bg-black"
       suppressHydrationWarning
     >
       {videoError ? (
@@ -1172,7 +1172,7 @@ export function VideoSlide({
           <button
             type="button"
             onClick={handleSoundClick}
-            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 md:flex"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95"
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
@@ -1184,22 +1184,6 @@ export function VideoSlide({
           </div>
 
         </div>
-      )}
-
-      {/* Mobile mute — right gutter, outside video frame */}
-      {showChrome && !videoError && (
-        <button
-          type="button"
-          onClick={handleSoundClick}
-          className="fixed right-[max(0.5rem,env(safe-area-inset-right))] bottom-[calc(var(--video-dock-bottom)+0.75rem)] z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-none comic-border bg-white text-brand-navy comic-shadow-sm transition hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 md:hidden"
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? (
-            <VolumeX className="h-6 w-6 stroke-[2.25]" aria-hidden />
-          ) : (
-            <Volume2 className="h-6 w-6 stroke-[2.25]" aria-hidden />
-          )}
-        </button>
       )}
 
       {/* Small popup overlay for selected subtitle word */}
@@ -1499,10 +1483,10 @@ export function VideoSlide({
       )}
 
 
-      {/* Floating vertical action rail — mobile: fixed in right gutter; desktop: inside video */}
+      {/* Floating vertical action rail — inside video, vertically centered on the right */}
       {showChrome && !videoError && (
       <div
-        className="fixed right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(var(--header-height)+1rem)] z-20 flex flex-col items-center gap-3 md:absolute md:right-3 md:left-auto md:top-1/2 md:-translate-y-1/2"
+        className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>

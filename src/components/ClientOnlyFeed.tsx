@@ -85,7 +85,7 @@ export function ClientOnlyFeed({ userId }: ClientOnlyFeedProps) {
         aria-hidden
       />
       <main
-        className="relative z-10 mr-auto h-full min-w-0 w-[var(--feed-max-width)] bg-black md:mx-auto"
+        className="relative z-10 mx-auto h-full min-w-0 w-[var(--feed-max-width)] bg-black"
         suppressHydrationWarning
       >
         {settingsReady ? (
@@ -117,7 +117,7 @@ export function FeedShellPlaceholder() {
         aria-hidden
       />
       <main
-        className="relative z-10 mr-auto h-full min-w-0 w-[var(--feed-max-width)] bg-black md:mx-auto"
+        className="relative z-10 mx-auto h-full min-w-0 w-[var(--feed-max-width)] bg-black"
         suppressHydrationWarning
       />
     </div>

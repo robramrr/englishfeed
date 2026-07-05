@@ -268,7 +268,7 @@ export function VideoFeed({
       </div>
       {/* Progress dots */}
       <div
-        className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-2 md:right-16"
+        className="absolute right-16 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-2"
         suppressHydrationWarning
       >
         {lessons.map((_, index) => (
