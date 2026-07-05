@@ -1483,10 +1483,10 @@ export function VideoSlide({
       )}
 
 
-      {/* Floating vertical action rail — inside video, vertically centered on the right */}
+      {/* Floating vertical action rail — mobile: top-right; desktop: vertically centered */}
       {showChrome && !videoError && (
       <div
-        className="absolute right-1.5 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-1.5 md:right-3 md:gap-3"
+        className="absolute right-1.5 top-3 z-20 flex flex-col items-center gap-1.5 md:right-3 md:top-1/2 md:-translate-y-1/2 md:gap-3"
         suppressHydrationWarning
       >
         <span className="sr-only">Video actions</span>
