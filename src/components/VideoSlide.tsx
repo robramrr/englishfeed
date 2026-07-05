@@ -1486,9 +1486,10 @@ export function VideoSlide({
       {/* Floating vertical action rail — mobile: top-right; desktop: vertically centered */}
       {showChrome && !videoError && (
       <div
-        className="absolute right-1.5 top-3 z-20 flex flex-col items-center gap-1.5 md:right-3 md:top-1/2 md:-translate-y-1/2 md:gap-3"
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-end px-1.5 pt-3 md:inset-0 md:items-center md:px-0 md:pt-0 md:pr-3"
         suppressHydrationWarning
       >
+        <div className="pointer-events-auto flex flex-col items-center gap-1.5 md:gap-3">
         <span className="sr-only">Video actions</span>
                 {lesson.subtitlesUrl && (
                   <div className="group relative flex flex-col items-center">
@@ -1687,6 +1688,7 @@ export function VideoSlide({
                     <MessageCircle className={actionRailIconClass} aria-hidden />
                   </Link>
                 </div>
+        </div>
       </div>
       )}
 
