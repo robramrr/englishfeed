@@ -224,6 +224,20 @@ html.feed-locked body {
   background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-red) 100%);
 }
 
+.comic-pattern-zigzag {
+  background-image:
+    linear-gradient(45deg, var(--comic-black) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--comic-black) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--comic-black) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--comic-black) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.comic-bg-purple {
+  background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-red) 100%);
+}
+
 .comic-bg-accent {
   background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-gray) 100%);
 }

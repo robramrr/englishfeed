@@ -55,14 +55,14 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="flex min-h-[var(--feed-viewport-height)] items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <img
-          src={ENGLISHFEED_LOGO_URL}
-          alt="EnglishFeed"
-          className="mx-auto mb-6 h-14 w-auto"
-        />
-        <ComicCard className="p-6">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden comic-bg-purple comic-pattern-zigzag px-4 py-12">
+      <div className="relative z-10 w-full max-w-md">
+        <ComicCard className="flex min-h-[32rem] flex-col px-6 pb-8 pt-10">
+          <img
+            src={ENGLISHFEED_LOGO_URL}
+            alt="EnglishFeed"
+            className="mx-auto mb-8 h-16 w-auto"
+          />
           <ComicTitle level={3} className="comic-title mb-6 text-center">
             {mode === "sign_in" ? "Sign in to EnglishFeed" : "Create your account"}
           </ComicTitle>
@@ -140,6 +140,6 @@ export default function AuthPage() {
           </form>
         </ComicCard>
       </div>
-    </main>
+    </section>
   );
 }
